@@ -4,7 +4,7 @@ let mdUrl = window.location.hash.substring(1);
 if (mdUrl.length > 0) {
     mdUrl = `https://cors-anywhere.herokuapp.com/${mdUrl}?raw=true`;
 } else {
-    mdUrl = "README.md";
+    mdUrl = "https://github.com/patarapolw/reveal-md/blob/master/README.md?raw=true";
 }
 
 interface ISettings {
