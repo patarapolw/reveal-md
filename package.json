@@ -1,0 +1,56 @@
+{
+  "name": "reveal-md",
+  "version": "0.1.0",
+  "description": "View markdown in Presentation mode with Reveal.js",
+  "homepage": "https://patarapolw.github.io/reveal-md",
+  "main": "js/reveal.js",
+  "scripts": {
+    "start": "webpack-dev-server --open --config webpack.dev.js",
+    "build": "webpack --config webpack.prod.js",
+    "reveal:test": "grunt test",
+    "reveal:start": "grunt serve",
+    "reveal:build": "grunt"
+  },
+  "author": {
+    "name": "Pacharapol Withayasakpunt",
+    "email": "patarapolw@gmail.com",
+    "web": "http://patarapolw.github.io"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/patarapolw/reveal-md.git"
+  },
+  "engines": {
+    "node": ">=4.0.0"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^3.12.0",
+    "css-loader": "^2.1.0",
+    "express": "^4.16.2",
+    "file-loader": "^3.0.1",
+    "grunt": "^1.0.1",
+    "grunt-autoprefixer": "^3.0.4",
+    "grunt-cli": "^1.2.0",
+    "grunt-contrib-connect": "^1.0.2",
+    "grunt-contrib-cssmin": "^2.2.1",
+    "grunt-contrib-jshint": "^1.1.0",
+    "grunt-contrib-qunit": "^2.0.0",
+    "grunt-contrib-uglify": "^3.3.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-retire": "^1.0.7",
+    "grunt-sass": "^2.0.0",
+    "grunt-zip": "~0.17.1",
+    "mustache": "^2.3.0",
+    "socket.io": "^1.7.3",
+    "style-loader": "^0.23.1",
+    "ts-loader": "^5.3.3",
+    "typescript": "^3.2.4",
+    "webpack": "^4.29.0",
+    "webpack-cli": "^3.2.1",
+    "webpack-dev-server": "^3.1.14"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "js-yaml": "^3.12.1"
+  }
+}
