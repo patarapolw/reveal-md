@@ -1,9 +1,7 @@
 import yaml from "js-yaml";
 
 let mdUrl = window.location.hash.substring(1);
-if (mdUrl.length > 0) {
-    mdUrl = `https://cors-anywhere.herokuapp.com/${mdUrl}?raw=true`;
-} else {
+if (mdUrl.length === 0) {
     mdUrl = "https://github.com/patarapolw/reveal-md/blob/master/README.md?raw=true";
 }
 
@@ -14,7 +12,7 @@ interface ISettings {
     revealOptions: any;
 }
 
-fetch(mdUrl).then((r) => r.text()).then((md) => {
+fetch(`https://cors-anywhere.herokuapp.com/${mdUrl}?raw=true`).then((r) => r.text()).then((md) => {
     const markdownSections = document.getElementById("markdownSections") as HTMLDivElement;
     let slides = md.split(/^---$/gm);
     let additionalSettings: ISettings = {
