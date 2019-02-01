@@ -16,7 +16,7 @@ fetch(`https://cors-anywhere.herokuapp.com/${mdUrl}?raw=true`).then((r) => r.tex
     const markdownSections = document.getElementById("markdownSections") as HTMLDivElement;
     let slides = md.split(/^---$/gm);
     let additionalSettings: ISettings = {
-        theme: "black",
+        theme: "white",
         highlightTheme: "zenburn"
     } as ISettings;
 
@@ -43,7 +43,7 @@ fetch(`https://cors-anywhere.herokuapp.com/${mdUrl}?raw=true`).then((r) => r.tex
         const section = document.createElement("section");
         section.setAttribute("data-markdown", "");
 
-        const secs = slide.split(/^---$/gm);
+        const secs = slide.split(/^--$/gm);
         if (secs.length > 1) {
             secs.forEach((sec) => {
                 const subSection = document.createElement("section");

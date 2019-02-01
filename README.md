@@ -5,8 +5,6 @@ transition: "zoom"
 
 # reveal-md
 
-Forked from <https://github.com/hakimel/reveal.js>
-
 ---
 
 This allows you to view markdown files online as a presentation in Reveal.js
