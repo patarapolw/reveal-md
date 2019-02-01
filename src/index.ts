@@ -2,7 +2,7 @@ import yaml from "js-yaml";
 
 let mdUrl = window.location.hash.substring(1);
 if (mdUrl.length === 0) {
-    mdUrl = "https://github.com/patarapolw/reveal-md/blob/master/README.md?raw=true";
+    mdUrl = "https://raw.githubusercontent.com/patarapolw/reveal-md/master/README.md";
 }
 
 interface ISettings {
@@ -12,7 +12,7 @@ interface ISettings {
     revealOptions: any;
 }
 
-fetch(`https://cors-anywhere.herokuapp.com/${mdUrl}?raw=true`).then((r) => r.text()).then((md) => {
+fetch(`https://cors-anywhere.herokuapp.com/${mdUrl}`).then((r) => r.text()).then((md) => {
     md = cleanLocalUrl(md);
 
     const markdownSections = document.getElementById("markdownSections") as HTMLDivElement;
