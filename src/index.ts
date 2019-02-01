@@ -13,6 +13,8 @@ interface ISettings {
 }
 
 fetch(`https://cors-anywhere.herokuapp.com/${mdUrl}?raw=true`).then((r) => r.text()).then((md) => {
+    md = cleanLocalUrl(md);
+
     const markdownSections = document.getElementById("markdownSections") as HTMLDivElement;
     let slides = md.split(/^---$/gm);
     let additionalSettings: ISettings = {
@@ -79,3 +81,15 @@ fetch(`https://cors-anywhere.herokuapp.com/${mdUrl}?raw=true`).then((r) => r.tex
         ]
     });
 });
+
+function cleanLocalUrl(md: string): string {
+    const mRegex = /\[[^\]]*\]\(([^)]*)\)/g;
+    let m = mRegex.exec(md);
+
+    while (m !== null) {
+        md = md.replace(m[1], new URL(m[1], mdUrl).href);
+        m = mRegex.exec(md);
+    }
+
+    return md;
+}
