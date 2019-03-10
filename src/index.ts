@@ -80,6 +80,17 @@ fetch(`https://cors-anywhere.herokuapp.com/${mdUrl}`).then((r) => r.text()).then
             } }
         ]
     });
+
+    (document.getElementById("jsStyle") as HTMLStyleElement).innerHTML = `
+    img, video, iframe {
+        height: ${window.innerHeight * 0.8}px !important;
+        max-width: ${window.innerWidth * 0.8}px !important;
+    }
+
+    .present {
+        max-height: ${window.innerHeight * 0.9}px;
+        overflow-y: scroll;
+    }`;
 });
 
 function cleanLocalUrl(md: string): string {
