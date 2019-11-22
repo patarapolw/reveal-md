@@ -1,56 +1,50 @@
 {
   "name": "reveal-md",
   "version": "0.1.0",
-  "description": "View markdown in Presentation mode with Reveal.js",
-  "homepage": "https://patarapolw.github.io/reveal-md",
-  "main": "js/reveal.js",
+  "private": true,
   "scripts": {
-    "start": "webpack-dev-server --open --config webpack.dev.js",
-    "build": "webpack --config webpack.prod.js",
-    "reveal:test": "grunt test",
-    "reveal:start": "grunt serve",
-    "reveal:build": "grunt"
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build"
   },
-  "author": {
-    "name": "Pacharapol Withayasakpunt",
-    "email": "patarapolw@gmail.com",
-    "web": "http://patarapolw.github.io"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/patarapolw/reveal-md.git"
-  },
-  "engines": {
-    "node": ">=4.0.0"
+  "dependencies": {
+    "@types/codemirror": "0.0.80",
+    "@types/express": "^4.17.2",
+    "@types/hyperscript": "0.0.3",
+    "@types/node": "^12.12.11",
+    "@types/showdown": "^1.9.3",
+    "@types/yargs": "^13.0.3",
+    "bootstrap": "^4.3.1",
+    "bootstrap-vue": "^2.1.0",
+    "codemirror": "^5.49.2",
+    "express": "^4.17.1",
+    "gray-matter": "^4.0.2",
+    "hyperpug": "^0.2.1",
+    "hyperscript": "^2.0.2",
+    "sanitize-filename": "^1.6.3",
+    "showdown": "^1.9.1",
+    "vue": "^2.6.10",
+    "vue-class-component": "^7.0.2",
+    "vue-cli-plugin-pug": "^1.0.7",
+    "vue-codemirror": "^4.0.6",
+    "vue-property-decorator": "^8.3.0",
+    "yargs": "^15.0.2"
   },
   "devDependencies": {
-    "@types/js-yaml": "^3.12.0",
-    "css-loader": "^2.1.0",
-    "express": "^4.16.2",
-    "file-loader": "^3.0.1",
-    "grunt": "^1.0.1",
-    "grunt-autoprefixer": "^3.0.4",
-    "grunt-cli": "^1.2.0",
-    "grunt-contrib-connect": "^1.0.2",
-    "grunt-contrib-cssmin": "^2.2.1",
-    "grunt-contrib-jshint": "^1.1.0",
-    "grunt-contrib-qunit": "^2.0.0",
-    "grunt-contrib-uglify": "^3.3.0",
-    "grunt-contrib-watch": "^1.0.0",
-    "grunt-retire": "^1.0.7",
-    "grunt-sass": "^2.0.0",
-    "grunt-zip": "~0.17.1",
-    "mustache": "^2.3.0",
-    "socket.io": "^1.7.3",
-    "style-loader": "^0.23.1",
-    "ts-loader": "^5.3.3",
-    "typescript": "^3.2.4",
-    "webpack": "^4.29.0",
-    "webpack-cli": "^3.2.1",
-    "webpack-dev-server": "^3.1.14"
+    "@vue/cli-plugin-typescript": "^4.0.0",
+    "@vue/cli-service": "^4.0.0",
+    "sass": "^1.19.0",
+    "sass-loader": "^8.0.0",
+    "typescript": "~3.5.3",
+    "vue-cli-plugin-bootstrap": "^1.0.0-alpha.0",
+    "vue-template-compiler": "^2.6.10"
   },
-  "license": "MIT",
-  "dependencies": {
-    "js-yaml": "^3.12.1"
-  }
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions"
+  ]
 }

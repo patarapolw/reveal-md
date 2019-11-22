@@ -1,0 +1,196 @@
+<template lang="pug">
+.h-100.w-100
+  .navbar
+    span Press F to enter fullscreen
+    .ml-auto
+      b-button.mr-3(variant="light" :disabled="!isReadFile || !raw" @click="saveMarkdown") Save
+      b-button.mr-3(variant="light" :disabled="!raw" @click="saveHTML") Download HTML
+      b-link(href="https://github.com/patarapolw/reveal-editor")
+        img(src="./assets/github.svg")
+  .editor(:class="showPreview ? 'w-50' : 'w-100'")
+    codemirror.codemirror(ref="cm" v-model="raw" :options="cmOptions" @input="onCmCodeChange")
+  iframe#iframe(ref="iframe" v-show="showPreview" src="reveal.html" frameborder="0")
+</template>
+
+<script lang="ts">
+import { Component, Vue, Watch } from 'vue-property-decorator';
+import matter from "gray-matter";
+import RevealMd from "./reveal-md";
+import sanitize from "sanitize-filename";
+
+@Component
+export default class App extends Vue {
+  cmOptions = {
+    mode: {
+      name: "yaml-frontmatter",
+      base: "markdown"
+    }
+  }
+  raw = process.env.VUE_APP_PLACEHOLDER || "";
+  markdown = "";
+  line: number = 0;
+  offset: number = 0;
+  showPreview = true;
+  headers: any = {};
+  title = process.env.VUE_APP_TITLE || "";
+  isReadFile = !!process.env.VUE_APP_READ_FILE;
+
+  get codemirror(): CodeMirror.Editor {
+    return (this.$refs.cm as any).codemirror;
+  }
+
+  get iframe(): HTMLIFrameElement {
+    return this.$refs.iframe as HTMLIFrameElement;
+  }
+
+  get iframeWindow() {
+    return this.iframe.contentWindow as Window & {
+      Reveal: RevealStatic,
+      revealMd: RevealMd;
+    }
+  }
+
+  onIFrameReady(fn: () => void) {
+    const toLoad = () => {
+      this.iframeWindow.revealMd.onReady(() => {
+        fn();
+      });
+    };
+    if (this.iframe && this.iframe.contentDocument) {
+      if (this.iframeWindow.revealMd) {
+        toLoad();
+      } else {
+        this.iframeWindow.onload = toLoad;
+      }
+    }
+  }
+
+  async mounted() {
+    this.codemirror.addKeyMap({
+      "Cmd-P": () => {this.showPreview = !this.showPreview},
+      "Ctrl-P": () => {this.showPreview = !this.showPreview},
+      "Cmd-S": () => { this.saveMarkdown() },
+      "Ctrl-S": () => { this.saveMarkdown() }
+    });
+    this.codemirror.on("cursorActivity", (instance) => {
+      this.line = instance.getCursor().line - this.offset;
+    });
+    const url = new URL(location.href).searchParams.get("q") || "";
+    if (url) {
+      this.raw = await ((await fetch(url)).text());
+    }
+    
+    this.onCmCodeChange();
+  }
+
+  onCmCodeChange() {
+    try {
+      const m = matter(this.raw);
+      Vue.set(this, "headers", m.data);
+      this.markdown = m.content;
+      this.offset = this.raw.replace(m.content, "").split("\n").length - 1;
+    } catch(e) {
+      this.markdown = this.raw;
+      this.offset = 0;
+    }
+    this.title = this.headers.title || "";
+    const title = document.getElementsByTagName("title")[0];
+    if (title) {
+      title.innerText = this.title;
+    }
+
+    this.onIFrameReady(() => {
+      this.iframeWindow.revealMd.update(this.raw);
+    });
+  }
+
+  @Watch("line")
+  onCursorMove() {
+    let slideNumber = 0;
+    let stepNumber = 0;
+    let i = 0;
+    for (const row of this.markdown.split("\n")) {
+      if (/^(?:---|===)$/.test(row)) {
+        slideNumber++;
+        stepNumber = 0;
+      } else if (/^--$/g.test(row)) {
+        stepNumber++;
+      } else if (row === "// global" || row === "// hidden") {
+        slideNumber--;
+      }
+      i++;
+      if (i > this.line) {
+        break;
+      }
+    }
+    this.iframeWindow.Reveal.slide(slideNumber, stepNumber);
+  }
+
+  saveMarkdown() {
+    fetch("/data", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({content: this.raw})
+    }).then((r) => {
+      if (r.status === 201) {
+        this.$bvModal.msgBoxOk("Saved");
+      } else {
+        this.$bvModal.msgBoxOk(`Cannot save: ${r.statusText}`);
+      }
+    })
+  }
+
+  saveHTML() {
+    const a = document.createElement("a");
+    a.href = "/save";
+    a.download = `${sanitize(this.title)}.zip`;
+    a.style.display = "none";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
+}
+</script>
+
+<style lang="scss">
+$navbar-height: 60px;
+html, body, #app {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+.h-100 {
+  height: 100%;
+}
+.w-100 {
+  width: 100%;
+}
+.w-50 {
+  width: 50%;
+}
+.navbar {
+  height: $navbar-height;
+  width: 100%;
+  background-color: orange;
+}
+#iframe {
+  position: fixed;
+  width: 48vw;
+  height: calc(98vh - 60px);
+  top: $navbar-height;
+  left: 51vw;
+}
+.editor {
+  height: calc(98vh - 60px) !important;
+  .CodeMirror {
+    height: calc(98vh - 60px) !important;
+  }
+}
+.CodeMirror {
+  height: auto !important;
+  widows: 100%;
+}
+</style>
