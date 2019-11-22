@@ -7,7 +7,8 @@
   },
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build",
+    "deploy": "npm run build && gh-pages -d dist"
   },
   "dependencies": {
     "@types/codemirror": "0.0.80",
@@ -36,6 +37,7 @@
   "devDependencies": {
     "@vue/cli-plugin-typescript": "^4.0.0",
     "@vue/cli-service": "^4.0.0",
+    "gh-pages": "^2.1.1",
     "sass": "^1.19.0",
     "sass-loader": "^8.0.0",
     "typescript": "~3.5.3",

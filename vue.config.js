@@ -18,17 +18,17 @@ if (FILENAME) {
 process.env.VUE_APP_REVEAL_CDN = (
   fs.existsSync(path.join(__dirname, "public", "reveal.js")) && 
   fs.statSync(path.join(__dirname, "public", "reveal.js")).isDirectory()
-) ? "/reveal.js/" : "https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/";
+) ? "/reveal-md/reveal.js/" : "https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/";
 
 module.exports = {
-  publicPath: "",
+  publicPath: "/reveal-md",
   pages: {
     index: "src/main.ts",
     reveal: "src/reveal.ts"
   },
   devServer: {
     open: true,
-    openPage: EDIT ? "/" : "/reveal.html",
+    openPage: EDIT ? "" : "reveal.html",
     before(app) {
       if (FILENAME) {
         app.use(bodyParser.json());
