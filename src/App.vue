@@ -183,7 +183,7 @@ html, body, #app {
 }
 
 .navbar {
-  display: inherit;
+  display: flex;
   height: $navbar-height;
   width: 100%;
   background-color: orange;
