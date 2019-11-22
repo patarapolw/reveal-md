@@ -12,4 +12,4 @@ content (Pug or HTML or extended Markdown)
 
 - The slides marked with `// global` or `// hidden` will be hidden.
 
-For more information, please see <https://patarapolw.github.io/reveal-md>
+For more information, please see <https://patarapolw.github.io/reveal-md/reveal.html>
