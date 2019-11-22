@@ -1,5 +1,7 @@
-import RevealMd from "./reveal-md";
-const r = new RevealMd();
+import RevealMd from "@patarapolw/reveal-md-core";
+const r = new RevealMd({
+  cdn: process.env.VUE_APP_REVEAL_CDN
+});
 
 const q = new URL(location.href).searchParams.get("q");
 

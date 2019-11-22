@@ -17,7 +17,7 @@
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import matter from "gray-matter";
-import RevealMd from "./reveal-md";
+import RevealMd from "@patarapolw/reveal-md-core";
 import sanitize from "sanitize-filename";
 
 @Component

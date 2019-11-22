@@ -1,3 +1,6 @@
 [submodule "public/reveal.js"]
 	path = public/reveal.js
 	url = https://github.com/hakimel/reveal.js.git
+[submodule "lib/reveal-md-core"]
+	path = lib/reveal-md-core
+	url = https://github.com/patarapolw/reveal-md-core.git
