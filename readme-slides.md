@@ -55,7 +55,6 @@ HTML is also supported
 ```
 git init
 git submodule add https://github.com/patarapolw/reveal-md.git
-git submodule update --init --recursive
 npm i ./reveal-md
 ```
 

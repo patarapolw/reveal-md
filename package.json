@@ -6,6 +6,7 @@
     "reveal-md": "./bin/cli.js"
   },
   "scripts": {
+    "preinstall": "git submodule update -i -r",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "deploy": "npm run build && gh-pages -d dist"
