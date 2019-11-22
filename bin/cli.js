@@ -9,13 +9,13 @@ const { argv } = yargs
   .version(require(path.join(__dirname, "../package.json")).version)
   .command("$0 [options] <filename>", "Read file in reveal-md", (args) => {
     args.positional("filename", {
-      describe: "Path to file to read",
+      describe: "Path to the file to read",
     })
   })
   .option("edit", {
     alias: "e",
     type: "boolean",
-    describe: "Edit the markdown file in editor"
+    describe: "Edit the file in editor"
   })
   .help();
 
