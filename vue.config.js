@@ -2,7 +2,7 @@ const fs = require("fs");
 const bodyParser = require("express");
 const path = require("path");
 
-const exampleFile = path.join(__dirname, "example.md");
+const exampleFile = path.join(__dirname, "readme-slides.md");
 
 const { FILENAME, EDIT } = process.env;
 

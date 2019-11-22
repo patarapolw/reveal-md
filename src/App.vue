@@ -4,7 +4,7 @@
     span.mr-3 Press F to enter fullscreen
     .ml-auto
       b-button.mr-3(variant="light" @click="showPreview = !showPreview") {{showPreview ? "Hide Preview" : "Show Preview"}}
-      b-button.mr-3(variant="light" :disabled="!isReadFile || !raw" @click="saveMarkdown") Save
+      b-button.mr-3(variant="light" :disabled="!canSave" @click="saveMarkdown") Save
       //- b-button.mr-3(variant="light" :disabled="!raw" @click="saveHTML") Download HTML
       b-link(href="https://github.com/patarapolw/reveal-editor")
         img(src="./assets/github.svg")
@@ -36,6 +36,8 @@ export default class App extends Vue {
   headers: any = {};
   title = process.env.VUE_APP_TITLE || "";
   isReadFile = !!process.env.VUE_APP_READ_FILE;
+
+  canSave = false;
 
   get codemirror(): CodeMirror.Editor {
     return (this.$refs.cm as any).codemirror;
@@ -101,6 +103,10 @@ export default class App extends Vue {
       title.innerText = `Editing: ${this.title}`;
     }
 
+    if (this.isReadFile && this.raw) {
+      this.canSave = true;
+    }
+
     this.onIFrameReady(() => {
       this.iframeWindow.revealMd.update(this.raw);
     });
@@ -111,21 +117,35 @@ export default class App extends Vue {
     let slideNumber = 0;
     let stepNumber = 0;
     let i = 0;
-    for (const row of this.markdown.split("\n")) {
-      if (/^(?:---|===)$/.test(row)) {
-        slideNumber++;
-        stepNumber = 0;
-      } else if (/^--$/g.test(row)) {
-        stepNumber++;
-      } else if (row === "// global" || row === "// hidden") {
-        slideNumber--;
+    let hiddenSlideCount = 0;
+    let isHidden = false;
+
+    this.markdown.split(/\r?\n===\r?\n/g).map((s_el, s_i) => {
+      isHidden = false;
+
+      if (i < this.line) {
+        slideNumber = s_i;
       }
-      i++;
-      if (i > this.line) {
-        break;
+
+      s_el.split(/\r?\n--\r?\n/).map((ss_el, ss_i) => {
+        if (i < this.line) {
+          stepNumber = ss_i;
+        }
+
+        i += ss_el.split("\n").length;
+      });
+
+      if (["// hidden", "// global"].includes(s_el.split("\n")[0])) {
+        hiddenSlideCount++;
+        isHidden = true;
       }
+    });
+
+    slideNumber -= hiddenSlideCount;
+
+    if (!isHidden && slideNumber >= 0) {
+      this.iframeWindow.Reveal.slide(slideNumber, stepNumber);
     }
-    this.iframeWindow.Reveal.slide(slideNumber, stepNumber);
   }
 
   saveMarkdown() {
@@ -137,7 +157,8 @@ export default class App extends Vue {
       body: JSON.stringify({content: this.raw})
     }).then((r) => {
       if (r.status === 201) {
-        this.$bvModal.msgBoxOk("Saved");
+        this.canSave = false;
+        // this.$bvModal.msgBoxOk("Saved");
       } else {
         this.$bvModal.msgBoxOk(`Cannot save: ${r.statusText}`);
       }

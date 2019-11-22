@@ -173,12 +173,13 @@ export class RevealMd {
     const setBody = () => {
       let reverseOffset = 0;
 
-      const newRaw = content.split(/\r?\n(?:---|===)\r?\n/g).map((el, x) => {
+      const newRaw = content.split(/\r?\n===\r?\n/g).map((el, x) => {
         const sectionRaw = this.parseSlide(el);
         if (sectionRaw.comment) {
           const lines = sectionRaw.comment.split("\n");
-          if (lines.includes("hidden") || lines.includes("global")) {
-            if (lines.includes("global")) {
+          const line = lines[0];
+          if (["hidden", "global"].includes(line)) {
+            if (line === "global") {
               const global = document.getElementById("global");
               if (global) {
                 global.innerHTML = sectionRaw.content;
