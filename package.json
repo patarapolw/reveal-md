@@ -32,17 +32,16 @@
     "vue-codemirror": "^4.0.6",
     "vue-mq": "^1.0.1",
     "vue-property-decorator": "^8.3.0",
-    "yargs": "^15.0.2"
-  },
-  "devDependencies": {
+    "yargs": "^15.0.2",
     "@vue/cli-plugin-typescript": "^4.0.0",
     "@vue/cli-service": "^4.0.0",
-    "gh-pages": "^2.1.1",
     "sass": "^1.19.0",
     "sass-loader": "^8.0.0",
     "typescript": "~3.5.3",
-    "vue-cli-plugin-bootstrap": "^1.0.0-alpha.0",
     "vue-template-compiler": "^2.6.10"
+  },
+  "devDependencies": {
+    "gh-pages": "^2.1.1"
   },
   "postcss": {
     "plugins": {

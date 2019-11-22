@@ -42,6 +42,12 @@ Options:
   --help      Show help                                                [boolean]
 ```
 
+## Save as HTML (and associated assets folder)
+
+This is best done by [downloading complete web page, in associated web browser](https://www.makeuseof.com/tag/save-complete-webpage-offline-reading/).
+
+Using web crawlers, like <https://github.com/website-scraper/node-website-scraper> won't work, because some JavaScript in Reveal.js is dynamically injected.
+
 ## Need a package for your own?
 
 I have released the package for some time at `npm i @patarapolw/reveal-md`.
