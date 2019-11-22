@@ -6,7 +6,7 @@
       b-button.mr-3(variant="light" @click="showPreview = !showPreview") {{showPreview ? "Hide Preview" : "Show Preview"}}
       b-button.mr-3(variant="light" :disabled="!canSave" @click="saveMarkdown") Save
       //- b-button.mr-3(variant="light" :disabled="!raw" @click="saveHTML") Download HTML
-      b-link(href="https://github.com/patarapolw/reveal-editor")
+      b-link(href="https://github.com/patarapolw/reveal-md")
         img(src="./assets/github.svg")
   .editor(:class="showPreview ? ($mq === 'mobile' ? 'hidden' : 'w-50') : 'w-100'")
     codemirror.codemirror(ref="cm" v-model="raw" :options="cmOptions" @input="onCmCodeChange")
@@ -123,16 +123,16 @@ export default class App extends Vue {
     this.markdown.split(/\r?\n===\r?\n/g).map((s_el, s_i) => {
       isHidden = false;
 
-      if (i < this.line) {
+      if (i <= this.line) {
         slideNumber = s_i;
       }
 
       s_el.split(/\r?\n--\r?\n/).map((ss_el, ss_i) => {
-        if (i < this.line) {
+        if (i <= this.line) {
           stepNumber = ss_i;
         }
 
-        i += ss_el.split("\n").length;
+        i += ss_el.split("\n").length + 1;
       });
 
       if (["// hidden", "// global"].includes(s_el.split("\n")[0])) {

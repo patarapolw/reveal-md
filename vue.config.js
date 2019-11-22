@@ -1,12 +1,19 @@
 const fs = require("fs");
-const bodyParser = require("express");
+const express = require("express");
+const bodyParser = require("body-parser");
 const path = require("path");
 
 const exampleFile = path.join(__dirname, "readme-slides.md");
 
-const { FILENAME, EDIT } = process.env;
+let { FILENAME, EDIT, MEDIA } = process.env;
+let ROOT = null;
 
 if (FILENAME) {
+  ROOT = path.dirname(FILENAME);
+  if (!MEDIA) {
+    MEDIA = path.join(ROOT, "media");
+  }
+
   process.env.VUE_APP_PLACEHOLDER = fs.readFileSync(FILENAME, "utf-8");
   process.env.VUE_APP_TITLE = FILENAME;
   process.env.VUE_APP_READ_FILE = "1";
@@ -15,13 +22,16 @@ if (FILENAME) {
   process.env.VUE_APP_TITLE = exampleFile;
 }
 
+const baseUrl = FILENAME ? "/" : "/reveal-md/"; 
+
 process.env.VUE_APP_REVEAL_CDN = (
   fs.existsSync(path.join(__dirname, "public", "reveal.js")) && 
   fs.statSync(path.join(__dirname, "public", "reveal.js")).isDirectory()
-) ? "/reveal-md/reveal.js/" : "https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/";
+) ? `${baseUrl}reveal.js/` 
+  : "https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/";
 
 module.exports = {
-  publicPath: "/reveal-md",
+  publicPath: baseUrl,
   pages: {
     index: "src/main.ts",
     reveal: "src/reveal.ts"
@@ -31,13 +41,13 @@ module.exports = {
     openPage: EDIT ? "" : "reveal.html",
     before(app) {
       if (FILENAME) {
-        app.use(bodyParser.json());
+        app.use("/media", express.static("media"));
 
         app.get("/data", (req, res) => {
           return res.send(fs.readFileSync(FILENAME, "utf8"))
         });
 
-        app.put("/data", (req, res) => {
+        app.put("/data", bodyParser.json(), (req, res) => {
           if (req.body.content) {
             fs.writeFileSync(FILENAME, req.body.content);
             return res.sendStatus(201);

@@ -13,6 +13,10 @@ style.
   p, li {
     font-size: 2rem;
   }
+  
+  code {
+    color: red;
+  }
 ```
 ===
 
@@ -41,7 +45,7 @@ HTML is also supported
 
 --
 ```html
-<small>Next slide</small>
+<small>Small character</small>
 ```
 
 ===
@@ -72,13 +76,20 @@ reveal-md [options] <filename>
 Read file in reveal-md
 
 Positionals:
-  filename  Path to file to read
+  filename  Path to the file to read
 
 Options:
-  --version   Show version number                                      [boolean]
-  --edit, -e  Edit the markdown file in editor                         [boolean]
-  --help      Show help                                                [boolean]
+  --version    Show version number                                     [boolean]
+  --edit, -e   Edit the file in editor                                 [boolean]
+  --media, -m  Path to media folder                                     [string]
+  --help       Show help                                               [boolean]
 ```
+
+===
+
+## Adding media to reveal-md
+
+By default, media can be put in the folder `media/` alongside the `*.md` file. The media can be referenced using the URL `/media/<FILENAME>`.
 
 ===
 
@@ -87,12 +98,6 @@ Options:
 This is best done by [downloading complete web page, in associated web browser](https://www.makeuseof.com/tag/save-complete-webpage-offline-reading/).
 
 Using web crawlers, like <https://github.com/website-scraper/node-website-scraper> won't work, because some JavaScript in Reveal.js is dynamically injected.
-
-===
-
-## Need a package for your own?
-
-I have released the package for some time at `npm i @patarapolw/reveal-md`.
 
 ===
 

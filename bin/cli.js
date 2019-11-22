@@ -17,6 +17,12 @@ const { argv } = yargs
     type: "boolean",
     describe: "Edit the file in editor"
   })
+  .option("media", {
+    alias: "m",
+    type: "string",
+    describe: "Path to media folder"
+  })
+  .coerce("media", path.resolve)
   .help();
 
 const r = spawnSync(path.join(__dirname, "../node_modules/.bin/vue-cli-service"), ["serve"], {
