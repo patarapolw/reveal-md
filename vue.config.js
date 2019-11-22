@@ -5,7 +5,7 @@ const path = require("path");
 
 const exampleFile = path.join(__dirname, "readme-slides.md");
 
-let { FILENAME, EDIT, MEDIA } = process.env;
+let { FILENAME, EDIT, MEDIA, PLUGIN } = process.env;
 let ROOT = null;
 
 if (FILENAME) {
@@ -13,6 +13,11 @@ if (FILENAME) {
   if (!MEDIA) {
     MEDIA = path.join(ROOT, "media");
   }
+
+  if (!PLUGIN) {
+    PLUGIN = path.join(ROOT, "plugin");
+  }
+  process.env.VUE_APP_PLUGIN = PLUGIN;
 
   process.env.VUE_APP_PLACEHOLDER = fs.readFileSync(FILENAME, "utf-8");
   process.env.VUE_APP_TITLE = FILENAME;
@@ -36,12 +41,18 @@ module.exports = {
     index: "src/main.ts",
     reveal: "src/reveal.ts"
   },
+  configureWebpack: {
+    resolve: {
+      modules: PLUGIN ? ["node_modules", PLUGIN] : ["node_modules"]
+    },
+    stats: "errors-only"
+  },
   devServer: {
     open: true,
     openPage: EDIT ? "" : "reveal.html",
     before(app) {
       if (FILENAME) {
-        app.use("/media", express.static("media"));
+        app.use("/media", express.static(MEDIA));
 
         app.get("/data", (req, res) => {
           return res.send(fs.readFileSync(FILENAME, "utf8"))

@@ -79,17 +79,26 @@ Positionals:
   filename  Path to the file to read
 
 Options:
-  --version    Show version number                                     [boolean]
-  --edit, -e   Edit the file in editor                                 [boolean]
-  --media, -m  Path to media folder                                     [string]
-  --help       Show help                                               [boolean]
+  --version     Show version number                                    [boolean]
+  --edit, -e    Edit the file in editor                                [boolean]
+  --media, -m   Path to media folder                                    [string]
+  --plugin, -p  Path to plugin folder                                   [string]
+  --no-media    No media should be loaded                              [boolean]
+  --no-plugin   No plugin should be loaded                             [boolean]
+  --help        Show help                                              [boolean]
 ```
 
 ===
 
 ## Adding media to reveal-md
 
-By default, media can be put in the folder `media/` alongside the `*.md` file. The media can be referenced using the URL `/media/<FILENAME>`.
+By default, media can be put in the folder `media/` alongside the `*.md` file. The media can be referenced using the URL `/media/<FILENAME>`. Can be disabled using `--no-media` flag.
+
+===
+
+## Adding plugins to reveal-md
+
+Also `plugin/` folder alongside `*.md` file will be loaded. Can be disabled using `--no-plugin` flag. For example, see <https://github.com/patarapolw/flatsrs>
 
 ===
 

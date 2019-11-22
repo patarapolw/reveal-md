@@ -22,14 +22,29 @@ const { argv } = yargs
     type: "string",
     describe: "Path to media folder"
   })
-  .coerce("media", path.resolve)
+  .option("plugin", {
+    alias: "p",
+    type: "string",
+    describe: "Path to plugin folder"
+  })
+  .option("no-media", {
+    type: "boolean",
+    describe: "No media should be loaded"
+  })
+  .option("no-plugin", {
+    type: "boolean",
+    describe: "No plugin should be loaded"
+  })
+  .coerce(["media", "plugin", "filename"], path.resolve)
   .help();
 
 const r = spawnSync(path.join(__dirname, "../node_modules/.bin/vue-cli-service"), ["serve"], {
   env: {
     ...process.env,
     EDIT: argv.edit ? "1" : undefined,
-    FILENAME: argv.filename
+    FILENAME: argv.filename,
+    MEDIA: argv["no-media"] ? undefined : argv.media,
+    PLUGIN: argv["no-plugin"] ? undefined : argv.plugin
   },
   cwd: path.dirname(__dirname),
   stdio: "inherit"

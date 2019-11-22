@@ -1,5 +1,25 @@
 import RevealMd from "@patarapolw/reveal-md-core";
+
+const plugin = process.env.VUE_APP_PLUGIN;
+let pug: any = {};
+let markdown: any[] = [];
+
+if (plugin) {
+  const req = require.context(process.env.VUE_APP_PLUGIN!, false, /.js$/);
+  for (const k of req.keys()) {
+    if (k === "./pug.js") {
+      pug = req(k);
+    } else if (k === "./markdown.js") {
+      markdown = req(k);
+    } else {
+      req(k);
+    }
+  }
+}
+
 const r = new RevealMd({
+  pug,
+  markdown,
   cdn: process.env.VUE_APP_REVEAL_CDN
 });
 
