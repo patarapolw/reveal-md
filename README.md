@@ -34,6 +34,6 @@ Options:
   --help      Show help                                                [boolean]
 ```
 
-## Need a package for your own
+## Need a package for your own?
 
 I have released the package for some time at `npm i @patarapolw/reveal-md`.
