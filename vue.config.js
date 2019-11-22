@@ -1,13 +1,14 @@
 const fs = require("fs");
-const { argv } = require("yargs");
 const bodyParser = require("express");
 const path = require("path");
 
 const exampleFile = path.join(__dirname, "example.md");
 
-if (argv.filename) {
-  process.env.VUE_APP_PLACEHOLDER = fs.readFileSync(argv.filename, "utf-8");
-  process.env.VUE_APP_TITLE = argv.filename;
+const { FILENAME, EDIT } = process.env;
+
+if (FILENAME) {
+  process.env.VUE_APP_PLACEHOLDER = fs.readFileSync(FILENAME, "utf-8");
+  process.env.VUE_APP_TITLE = FILENAME;
   process.env.VUE_APP_READ_FILE = "1";
 } else {
   process.env.VUE_APP_PLACEHOLDER = fs.readFileSync(exampleFile, "utf-8");
@@ -26,17 +27,19 @@ module.exports = {
     reveal: "src/reveal.ts"
   },
   devServer: {
+    open: true,
+    openPage: EDIT ? "/" : "/reveal.html",
     before(app) {
-      if (argv.filename) {
+      if (FILENAME) {
         app.use(bodyParser.json());
 
         app.get("/data", (req, res) => {
-          return res.send(fs.readFileSync(argv.filename, "utf8"))
+          return res.send(fs.readFileSync(FILENAME, "utf8"))
         });
 
         app.put("/data", (req, res) => {
           if (req.body.content) {
-            fs.writeFileSync(argv.filename, req.body.content);
+            fs.writeFileSync(FILENAME, req.body.content);
             return res.sendStatus(201);
           } else {
             return res.sendStatus(203);

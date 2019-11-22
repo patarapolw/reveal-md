@@ -1,2 +1,4 @@
 import RevealMd from "./reveal-md";
-new RevealMd();
+const r = new RevealMd();
+
+r.update(process.env.VUE_APP_PLACEHOLDER || "");

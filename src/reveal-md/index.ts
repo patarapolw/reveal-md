@@ -174,7 +174,6 @@ export class RevealMd {
       let reverseOffset = 0;
 
       const newRaw = content.split(/\r?\n(?:---|===)\r?\n/g).map((el, x) => {
-        console.log(el);
         const sectionRaw = this.parseSlide(el);
         if (sectionRaw.comment) {
           const lines = sectionRaw.comment.split("\n");

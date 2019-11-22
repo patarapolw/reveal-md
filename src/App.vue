@@ -1,15 +1,17 @@
 <template lang="pug">
 .h-100.w-100
   .navbar
-    span Press F to enter fullscreen
+    span.mr-3 Press F to enter fullscreen
     .ml-auto
+      b-button.mr-3(variant="light" @click="showPreview = !showPreview") {{showPreview ? "Hide Preview" : "Show Preview"}}
       b-button.mr-3(variant="light" :disabled="!isReadFile || !raw" @click="saveMarkdown") Save
       b-button.mr-3(variant="light" :disabled="!raw" @click="saveHTML") Download HTML
       b-link(href="https://github.com/patarapolw/reveal-editor")
         img(src="./assets/github.svg")
-  .editor(:class="showPreview ? 'w-50' : 'w-100'")
+  .editor(:class="showPreview ? ($mq === 'mobile' ? 'hidden' : 'w-50') : 'w-100'")
     codemirror.codemirror(ref="cm" v-model="raw" :options="cmOptions" @input="onCmCodeChange")
-  iframe#iframe(ref="iframe" v-show="showPreview" src="reveal.html" frameborder="0")
+  iframe(ref="iframe" src="reveal.html" frameborder="0"
+  :class="showPreview ? ($mq === 'mobile' ? 'w-100' : 'w-50') : 'hidden'")
 </template>
 
 <script lang="ts">
@@ -30,7 +32,7 @@ export default class App extends Vue {
   markdown = "";
   line: number = 0;
   offset: number = 0;
-  showPreview = true;
+  showPreview = (this as any).$mq !== "mobile";
   headers: any = {};
   title = process.env.VUE_APP_TITLE || "";
   isReadFile = !!process.env.VUE_APP_READ_FILE;
@@ -96,7 +98,7 @@ export default class App extends Vue {
     this.title = this.headers.title || "";
     const title = document.getElementsByTagName("title")[0];
     if (title) {
-      title.innerText = this.title;
+      title.innerText = `Editing: ${this.title}`;
     }
 
     this.onIFrameReady(() => {
@@ -156,39 +158,57 @@ export default class App extends Vue {
 
 <style lang="scss">
 $navbar-height: 60px;
+
 html, body, #app {
   margin: 0;
   padding: 0;
   height: 100%;
   width: 100%;
 }
+
 .h-100 {
   height: 100%;
 }
+
 .w-100 {
   width: 100%;
 }
+
 .w-50 {
   width: 50%;
 }
+
+.hidden {
+  display: none;
+}
+
 .navbar {
+  display: inherit;
   height: $navbar-height;
   width: 100%;
   background-color: orange;
+  overflow: auto;
+  white-space: nowrap;
 }
-#iframe {
+
+iframe {
   position: fixed;
-  width: 48vw;
   height: calc(98vh - 60px);
   top: $navbar-height;
-  left: 51vw;
+
+  &.w-50 {
+    left: 50vw;
+  }
 }
+
 .editor {
   height: calc(98vh - 60px) !important;
+
   .CodeMirror {
     height: calc(98vh - 60px) !important;
   }
 }
+
 .CodeMirror {
   height: auto !important;
   widows: 100%;

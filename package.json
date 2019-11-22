@@ -2,6 +2,9 @@
   "name": "reveal-md",
   "version": "0.1.0",
   "private": true,
+  "bin": {
+    "reveal-md": "./bin/cli.js"
+  },
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build"
@@ -26,6 +29,7 @@
     "vue-class-component": "^7.0.2",
     "vue-cli-plugin-pug": "^1.0.7",
     "vue-codemirror": "^4.0.6",
+    "vue-mq": "^1.0.1",
     "vue-property-decorator": "^8.3.0",
     "yargs": "^15.0.2"
   },
