@@ -38,13 +38,17 @@ const { argv } = yargs
   .coerce(["media", "plugin", "filename"], path.resolve)
   .help();
 
+const { edit, filename, media, plugin } = argv;
+
 const r = spawnSync(path.join(__dirname, "../node_modules/.bin/vue-cli-service"), ["serve"], {
   env: {
     ...process.env,
-    EDIT: argv.edit ? "1" : undefined,
-    FILENAME: argv.filename,
-    MEDIA: argv["no-media"] ? undefined : argv.media,
-    PLUGIN: argv["no-plugin"] ? undefined : argv.plugin
+    CONFIG: JSON.stringify({
+      edit,
+      filename,
+      media: argv["no-media"] ? null : media,
+      plugin: argv["no-plugin"] ? null : plugin
+    })
   },
   cwd: path.dirname(__dirname),
   stdio: "inherit"

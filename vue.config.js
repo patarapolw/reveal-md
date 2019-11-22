@@ -5,29 +5,32 @@ const path = require("path");
 
 const exampleFile = path.join(__dirname, "readme-slides.md");
 
-let { FILENAME, EDIT, MEDIA, PLUGIN } = process.env;
-let ROOT = null;
+let config = null;
 
-if (FILENAME) {
-  ROOT = path.dirname(FILENAME);
-  if (!MEDIA) {
-    MEDIA = path.join(ROOT, "media");
+if (process.env.CONFIG) {
+  config = JSON.parse(process.env.CONFIG);
+}
+
+if (config) {
+  const ROOT = path.dirname(config.filename);
+  if (!config.media) {
+    config.media = path.join(ROOT, "media");
   }
 
-  if (!PLUGIN) {
-    PLUGIN = path.join(ROOT, "plugin");
+  if (!config.plugin) {
+    config.plugin = path.join(ROOT, "plugin");
   }
-  process.env.VUE_APP_PLUGIN = PLUGIN;
+  process.env.VUE_APP_PLUGIN = config.plugin;
 
-  process.env.VUE_APP_PLACEHOLDER = fs.readFileSync(FILENAME, "utf-8");
-  process.env.VUE_APP_TITLE = FILENAME;
+  process.env.VUE_APP_PLACEHOLDER = fs.readFileSync(config.filename, "utf-8");
+  process.env.VUE_APP_TITLE = config.filename;
   process.env.VUE_APP_READ_FILE = "1";
 } else {
   process.env.VUE_APP_PLACEHOLDER = fs.readFileSync(exampleFile, "utf-8");
   process.env.VUE_APP_TITLE = exampleFile;
 }
 
-const baseUrl = FILENAME ? "/" : "/reveal-md/"; 
+const baseUrl = config ? "/" : "/reveal-md/"; 
 
 process.env.VUE_APP_REVEAL_CDN = (
   fs.existsSync(path.join(__dirname, "public", "reveal.js")) && 
@@ -43,24 +46,26 @@ module.exports = {
   },
   configureWebpack: {
     resolve: {
-      modules: PLUGIN ? ["node_modules", PLUGIN] : ["node_modules"]
+      modules: config ? ["node_modules", config.plugin] : ["node_modules"]
     },
     stats: "errors-only"
   },
   devServer: {
     open: true,
-    openPage: EDIT ? "" : "reveal.html",
+    openPage: config 
+      ? config.edit ? "" : "reveal.html"
+      : "",
     before(app) {
-      if (FILENAME) {
-        app.use("/media", express.static(MEDIA));
+      if (config) {
+        app.use("/media", express.static(config.media));
 
         app.get("/data", (req, res) => {
-          return res.send(fs.readFileSync(FILENAME, "utf8"))
+          return res.send(fs.readFileSync(config.filename, "utf8"))
         });
 
         app.put("/data", bodyParser.json(), (req, res) => {
           if (req.body.content) {
-            fs.writeFileSync(FILENAME, req.body.content);
+            fs.writeFileSync(config.filename, req.body.content);
             return res.sendStatus(201);
           } else {
             return res.sendStatus(203);
