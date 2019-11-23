@@ -13,14 +13,17 @@ if (process.env.CONFIG) {
 
 if (config) {
   const ROOT = path.dirname(config.filename);
-  if (!config.media) {
+  if (config.media === undefined) {
     config.media = path.join(ROOT, "media");
   }
 
-  if (!config.plugin) {
+  if (config.plugin === undefined) {
     config.plugin = path.join(ROOT, "plugin");
   }
-  process.env.VUE_APP_PLUGIN = config.plugin;
+
+  if (config.plugin) {
+    process.env.VUE_APP_PLUGIN = config.plugin;
+  }
 
   process.env.VUE_APP_PLACEHOLDER = fs.readFileSync(config.filename, "utf-8");
   process.env.VUE_APP_TITLE = config.filename;
@@ -44,12 +47,6 @@ module.exports = {
     index: "src/main.ts",
     reveal: "src/reveal.ts"
   },
-  configureWebpack: {
-    resolve: {
-      modules: config ? ["node_modules", config.plugin] : ["node_modules"]
-    },
-    stats: "errors-only"
-  },
   devServer: {
     open: true,
     openPage: config 
@@ -57,7 +54,9 @@ module.exports = {
       : "",
     before(app) {
       if (config) {
-        app.use("/media", express.static(config.media));
+        if (config.media) {
+          app.use("/media", express.static(config.media));
+        }
 
         app.get("/data", (req, res) => {
           return res.send(fs.readFileSync(config.filename, "utf8"))
