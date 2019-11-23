@@ -82,6 +82,8 @@ export default class App extends Vue {
     const url = new URL(location.href).searchParams.get("q") || "";
     if (url) {
       this.raw = await ((await fetch(url)).text());
+    } else if (this.isReadFile) {
+      this.raw = await ((await fetch("/data")).text());
     }
     
     this.onCmCodeChange();
@@ -99,7 +101,7 @@ export default class App extends Vue {
     }
     this.title = this.headers.title || "";
     const title = document.getElementsByTagName("title")[0];
-    if (title) {
+    if (this.title && title) {
       title.innerText = `Editing: ${this.title}`;
     }
 
@@ -114,6 +116,10 @@ export default class App extends Vue {
 
   @Watch("line")
   onCursorMove() {
+    if (this.line < 0) {
+      return;
+    }
+
     let slideNumber = 0;
     let stepNumber = 0;
     let i = 0;
@@ -214,7 +220,7 @@ html, body, #app {
 
 iframe {
   position: fixed;
-  height: calc(98vh - 60px);
+  height: calc(100vh - 60px);
   top: $navbar-height;
 
   &.w-50 {
@@ -223,15 +229,15 @@ iframe {
 }
 
 .editor {
-  height: calc(98vh - 60px) !important;
+  height: calc(100vh - 60px) !important;
 
   .CodeMirror {
-    height: calc(98vh - 60px) !important;
+    height: calc(100vh - 60px) !important;
   }
 }
 
 .CodeMirror {
   height: auto !important;
-  widows: 100%;
+  width: 100%;
 }
 </style>

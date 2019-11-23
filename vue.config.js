@@ -25,7 +25,7 @@ if (config) {
     process.env.VUE_APP_PLUGIN = config.plugin;
   }
 
-  process.env.VUE_APP_PLACEHOLDER = fs.readFileSync(config.filename, "utf-8");
+  process.env.VUE_APP_PLACEHOLDER = "";
   process.env.VUE_APP_TITLE = config.filename;
   process.env.VUE_APP_READ_FILE = "1";
 } else {
