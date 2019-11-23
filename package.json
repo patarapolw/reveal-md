@@ -9,7 +9,8 @@
     "preinstall": "git submodule update -i -r",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "deploy": "npm run build && gh-pages -d dist"
+    "deploy": "npm run build && gh-pages -d dist",
+    "release": "npm-github-release"
   },
   "dependencies": {
     "@patarapolw/reveal-md-core": "file:lib/reveal-md-core",
@@ -38,7 +39,8 @@
     "yargs": "^15.0.2"
   },
   "devDependencies": {
-    "gh-pages": "^2.1.1"
+    "gh-pages": "^2.1.1",
+    "npm-github-release": "^0.12.0"
   },
   "postcss": {
     "plugins": {
@@ -48,5 +50,9 @@
   "browserslist": [
     "> 1%",
     "last 2 versions"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/patarapolw/reveal-md.git"
+  }
 }
