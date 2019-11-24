@@ -1,8 +1,10 @@
 const fs = require("fs");
 const path = require("path");
-const express, { Router } = require("express");
+const express = require("express");
+const { Router } = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const open = require("open");
 
 function initServer(config) {
   const router = Router();
@@ -10,7 +12,7 @@ function initServer(config) {
 
   router.get("/", (req, res) => {
     return res.json(config);
-  })
+  });
 
   router.get("/data", (req, res) => {
     const { filename } = req.query;
@@ -37,6 +39,12 @@ function initServer(config) {
   const port = process.env.PORT || 24000;
   app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
+
+    // if (config.edit) {
+    //   open(`http://localhost:${port}`);
+    // } else {
+    //   open(`http://localhost:${port}/reveal.html`)
+    // }
   });
 }
 

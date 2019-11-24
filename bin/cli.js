@@ -2,6 +2,8 @@
 
 const yargs = require("yargs");
 const path = require("path");
+const fs = require("fs");
+const dree = require("dree");
 const { initServer } = require("./server");
 
 const { argv } = yargs
@@ -29,10 +31,20 @@ const { argv } = yargs
   .coerce(["media", "plugin", "filename"], path.resolve)
   .help();
 
-const { edit, filename, media, plugin } = argv;
+let { edit, filename, media } = argv;
+let dirTree;
+
+if (fs.statSync(filename).isDirectory()) {
+  dirTree = dree.scan(filename, {
+    extensions: ["md"],
+    exclude: [/\.git/, /node_modules/]
+  });
+  filename = undefined; 
+}
 
 initServer({
   edit,
   filename,
-  media: argv["no-media"] ? null : media || path.join(path.dirname(filename), "media")
+  dirTree,
+  media: argv["no-media"] ? null : media || dirTree ? dirTree.path : path.join(path.dirname(filename), "media")
 });

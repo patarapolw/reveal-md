@@ -7,6 +7,8 @@
     "reveal-md": "bin/cli.js"
   },
   "scripts": {
+    "start": "node bin/cli.js .",
+    "preinstall": "cd web && npm i && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -25,6 +27,7 @@
   "homepage": "https://github.com/patarapolw/reveal-md#readme",
   "dependencies": {
     "cors": "^2.8.5",
+    "dree": "^2.1.11",
     "express": "^4.17.1",
     "open": "^7.0.0",
     "yargs": "^15.0.2"

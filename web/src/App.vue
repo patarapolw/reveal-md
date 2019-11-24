@@ -3,6 +3,7 @@
   .navbar
     span.mr-3 Press F to enter fullscreen
     .ml-auto
+      b-button.mr-3(v-if="dirTree" variant="light" @click="isChooseFile = true") Choose file
       b-button.mr-3(variant="light" @click="showPreview = !showPreview") {{showPreview ? "Hide Preview" : "Show Preview"}}
       b-button.mr-3(variant="light" :disabled="!canSave" @click="saveMarkdown") Save
       //- b-button.mr-3(variant="light" :disabled="!raw" @click="saveHTML") Download HTML
@@ -12,6 +13,8 @@
     codemirror.codemirror(ref="cm" v-model="raw" :options="cmOptions" @input="onCmCodeChange")
   iframe(ref="iframe" :src="iframeUrl" frameborder="0"
   :class="showPreview ? ($mq === 'mobile' ? 'w-100' : 'w-50') : 'hidden'")
+  b-modal(v-if="dirTree" v-model="isChooseFile" :title="dirTree.path" scrollable)
+    treeview(:items="dirTree.children" @filename="filename = $event")
 </template>
 
 <script lang="ts">
@@ -19,10 +22,15 @@ import { Component, Vue, Watch } from 'vue-property-decorator';
 import matter from "gray-matter";
 import RevealMd from "./lib/reveal-md";
 import sanitize from "sanitize-filename";
+import Treeview from "@/components/Treeview.vue";
 
 declare const process: any;
 
-@Component
+@Component({
+  components: {
+    Treeview
+  }
+})
 export default class App extends Vue {
   cmOptions = {
     mode: {
@@ -37,7 +45,9 @@ export default class App extends Vue {
   showPreview = (this as any).$mq !== "mobile";
   headers: any = {};
   title = "";
+  isChooseFile = false;
   filename = "";
+  dirTree: any = null;
 
   canSave = false;
 
@@ -90,15 +100,15 @@ export default class App extends Vue {
         this.raw = r;
       })
     } else if (!process.env.VUE_APP_PLACEHOLDER) {
-      fetch("/api").then((r) => r.json()).then((r) => {
-        this.filename = r.filename;
-        document.getElementsByTagName("title")[0].innerText = r.filename.split("/").pop();
-
-        const url = new URL("/api/data", location.origin);
-        url.searchParams.set("filename", r.filename);
-        fetch(url.href).then((r2) => r2.text()).then((r2) => {
-          this.raw = r2;
-        }).catch((e) => console.error(e));
+      fetch("/api/").then((r) => {
+        return r.json();
+      }).then((r) => {
+        if (r.filename) {
+          this.openFile(r.filename);
+        } else {
+          this.dirTree = r.dirTree;
+          this.isChooseFile = true;
+        }
       }).catch((e) => console.error(e));
     }
   }
@@ -114,6 +124,20 @@ export default class App extends Vue {
       this.line = instance.getCursor().line - this.offset;
     });
     this.onCmCodeChange();
+  }
+
+  @Watch("filename")
+  openFile(filename: string) {
+    this.isChooseFile = false;
+
+    this.filename = filename;
+    document.getElementsByTagName("title")[0].innerText = filename.split("/").pop()!;
+
+    const url = new URL("/api/data", location.origin);
+    url.searchParams.set("filename", filename);
+    fetch(url.href).then((r2) => r2.text()).then((r2) => {
+      this.raw = r2;
+    }).catch((e) => console.error(e));
   }
 
   onCmCodeChange() {
