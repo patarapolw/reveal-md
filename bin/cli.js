@@ -33,6 +33,7 @@ const { argv } = yargs
 
 let { edit, filename, media } = argv;
 let dirTree;
+let root = filename;
 
 if (fs.statSync(filename).isDirectory()) {
   dirTree = dree.scan(filename, {
@@ -40,11 +41,14 @@ if (fs.statSync(filename).isDirectory()) {
     exclude: [/\.git/, /node_modules/]
   });
   filename = undefined; 
+} else {
+  root = path.dirname(filename);
 }
 
 initServer({
   edit,
   filename,
   dirTree,
-  media: argv["no-media"] ? null : media || dirTree ? dirTree.path : path.join(path.dirname(filename), "media")
+  media: argv["no-media"] ? null : media || dirTree ? dirTree.path : path.join(root, "media"),
+  root
 });

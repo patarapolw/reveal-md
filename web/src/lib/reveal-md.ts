@@ -184,18 +184,42 @@ export class RevealMd {
         const sectionRaw = this.parseSlide(el);
         if (sectionRaw.comment) {
           const lines = sectionRaw.comment.split("\n");
-          const line = lines[0];
-          if (["hidden", "global"].includes(line)) {
-            if (line === "global") {
+          for (const line of lines) {
+            if (["hidden", "global"].includes(line)) {
+              if (line === "global") {
+                const global = document.getElementById("global");
+                if (global) {
+                  let el = global.querySelector("#global--main");
+                  if (!el) {
+                    el = document.createElement("div");
+                    el.id = "global--main";
+                    global.appendChild(el);
+                  }
+                  el.innerHTML = sectionRaw.content;
+                }
+              }
+  
+              reverseOffset++;
+              return null;
+            } else if (line.startsWith("ref=")) {
               const global = document.getElementById("global");
               if (global) {
-                global.innerHTML = sectionRaw.content;
+                const ref = line.split("=")[1];
+                let el = global.querySelector(`#global--${CSS.escape(ref)}`);
+                if (!el) {
+                  el = document.createElement("div");
+                  el.id = `global--${CSS.escape(ref)}`;
+                  global.appendChild(el);
+                }
+                const url = new URL("/api/data", location.origin);
+                url.searchParams.set("filename", ref);
+                fetch(url.href).then((r) => r.text()).then((r) => {
+                  el!.innerHTML = this.parseSlide(r).content;
+                })
               }
             }
-
-            reverseOffset++;
-            return null;
           }
+          
         }
 
         x -= reverseOffset;

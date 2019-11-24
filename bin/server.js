@@ -7,6 +7,11 @@ const cors = require("cors");
 const open = require("open");
 
 function initServer(config) {
+  function resolveFilename(s) {
+    s = s.replace(/^@\//, config.root);
+    return path.resolve(path.relative(config.filename, s));
+  }
+
   const router = Router();
   router.use(cors());
 
@@ -16,13 +21,13 @@ function initServer(config) {
 
   router.get("/data", (req, res) => {
     const { filename } = req.query;
-    return res.send(fs.readFileSync(filename, "utf8"))
+    return res.send(fs.readFileSync(resolveFilename(filename), "utf8"))
   });
 
   router.put("/data", bodyParser.json(), (req, res) => {
     const { filename, content } = req.body;
 
-    fs.writeFileSync(filename, content);
+    fs.writeFileSync(resolveFilename(filename), content);
     return res.sendStatus(201);
   });
 
@@ -40,11 +45,11 @@ function initServer(config) {
   app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 
-    // if (config.edit) {
-    //   open(`http://localhost:${port}`);
-    // } else {
-    //   open(`http://localhost:${port}/reveal.html`)
-    // }
+    if (config.edit) {
+      open(`http://localhost:${port}`);
+    } else {
+      open(`http://localhost:${port}/reveal.html`)
+    }
   });
 }
 
