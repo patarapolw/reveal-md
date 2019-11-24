@@ -1,13 +1,20 @@
 import RevealMd from "./lib/reveal-md";
+import qs from "querystring";
 
 const r = new RevealMd(process.env.VUE_APP_REVEAL_CDN!);
 
-const q = new URL(location.href).searchParams.get("q");
+const sp = new URL(location.href).searchParams;
 
-if (q) {
-  fetch(q).then((res) => res.text()).then((res) => {
+if (sp.get("q")) {
+  fetch(sp.get("q")!).then((res) => res.text()).then((res) => {
     r.update(res);
-  })
+  });
+} else if (sp.get("filename")) {
+  fetch("/api/data?" + qs.stringify({
+    filename: sp.get("filename")
+  })).then((res) => res.text()).then((res) => {
+    r.update(res);
+  });
 } else {
   r.update(process.env.VUE_APP_PLACEHOLDER || "")
 }

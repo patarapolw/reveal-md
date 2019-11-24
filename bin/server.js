@@ -5,11 +5,12 @@ const { Router } = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const open = require("open");
+const qs = require("querystring");
 
 function initServer(config) {
   function resolveFilename(s) {
     s = s.replace(/^@\//, config.root);
-    return path.resolve(path.relative(config.filename, s));
+    return path.resolve(config.filename ? path.relative(config.filename, s) : s);
   }
 
   const router = Router();
@@ -45,10 +46,12 @@ function initServer(config) {
   app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 
-    if (config.edit) {
+    if (!config.filename || config.edit) {
       open(`http://localhost:${port}`);
     } else {
-      open(`http://localhost:${port}/reveal.html`)
+      open(`http://localhost:${port}/reveal.html?${qs.stringify({
+        filename: this.filename
+      })}`);
     }
   });
 }
