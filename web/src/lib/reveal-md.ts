@@ -95,22 +95,6 @@ export class RevealMd {
         }));
       }
     }
-
-    window.addEventListener("load", () => {
-      const reveal = window.Reveal;
-
-      if (reveal) {
-        reveal.initialize();
-
-        this.onReady(() => {
-          if (this.queue.ready.length > 0) {
-            this.queue.ready.forEach((it) => it(reveal));
-            reveal.slide(-1, -1, -1);
-            reveal.sync();
-          }
-        });
-      }
-    });
   }
 
   getMdConverter() {
@@ -299,14 +283,34 @@ export class RevealMd {
     setBody();
   }
 
-  onReady(fn: (reveal?: RevealStatic) => void) {
+  onReady(fn?: (reveal?: RevealStatic) => void) {
     const reveal = window.Reveal;
-    if (reveal && reveal.isReady()) {
-      fn(reveal);
-      // reveal.slide(-1, -1, -1);
-      // reveal.sync();
+    if (reveal) {
+      if (!reveal.isReady()) {
+        reveal.initialize();
+        if (this.queue.ready.length > 0) {
+          this.queue.ready.forEach((it) => it(reveal));
+          reveal.slide(-1, -1, -1);
+          reveal.sync();
+        }
+      }
+
+      if (fn) {
+        fn(reveal);
+      }
     } else {
-      this.queue.ready.push((fn));
+      if (fn) {
+        this.queue.ready.push((fn));
+      }
+
+      setTimeout(() => {
+        this.onReady();
+        const reveal = window.Reveal;
+        if (reveal) {
+          reveal.slide(-1, -1, -1);
+          reveal.sync();
+        }
+      }, 1000);
     }
   }
 

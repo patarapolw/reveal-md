@@ -13,7 +13,7 @@
     codemirror.codemirror(ref="cm" v-model="raw" :options="cmOptions" @input="onCmCodeChange")
   iframe(ref="iframe" :src="iframeUrl" frameborder="0"
   :class="showPreview ? ($mq === 'mobile' ? 'w-100' : 'w-50') : 'hidden'")
-  b-modal(v-if="dirTree" v-model="isChooseFile" :title="dirTree.path" scrollable)
+  b-modal(v-if="dirTree" v-model="isChooseFile" :title="dirTree.path" scrollable static)
     treeview(:items="dirTree.children" @filename="filename = $event")
 </template>
 
