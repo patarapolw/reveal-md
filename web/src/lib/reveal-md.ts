@@ -1,5 +1,5 @@
 import "./reveal-d";
-import pug, { IHyperPugFilters } from "hyperpug";
+import pug from "hyperpug";
 import showdown from "showdown";
 import h from "hyperscript"
 import matter from "gray-matter";
@@ -44,19 +44,14 @@ export class RevealMd {
   };
 
   revealOptions: IRevealOptions;
-  
-  cdn = "https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/";
 
   private _headers: any = {};
 
-  constructor(public revealMdOptions: {
-    markdown?: showdown.ShowdownExtension[];
-    pug?: IHyperPugFilters;
-    cdn?: string;
-  } = {}, revealOptions: Partial<IRevealOptions> = {}) {
+  constructor(
+    public cdn = "https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/",
+    revealOptions: Partial<IRevealOptions> = {}
+  ) {
     this.revealOptions = JSON.parse(JSON.stringify(options));
-
-    this.cdn = revealMdOptions.cdn || this.cdn;
     if (revealOptions.css) {
       this.revealOptions.css.push(...revealOptions.css);
     }

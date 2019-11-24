@@ -20,9 +20,7 @@ import matter from "gray-matter";
 import RevealMd from "./lib/reveal-md";
 import sanitize from "sanitize-filename";
 
-declare global {
-  const process: any;
-}
+declare const process: any;
 
 @Component
 export default class App extends Vue {
@@ -94,7 +92,7 @@ export default class App extends Vue {
     } else if (!process.env.VUE_APP_PLACEHOLDER) {
       fetch("/api").then((r) => r.json()).then((r) => {
         this.filename = r.filename;
-        document.getElementsByTagName("title")[0].innerText = this.filename.split("/").pop();
+        document.getElementsByTagName("title")[0].innerText = r.filename.split("/").pop();
 
         const url = new URL("/api/data", location.origin);
         url.searchParams.set("filename", r.filename);
