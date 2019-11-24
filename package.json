@@ -1,5 +1,5 @@
 {
-  "name": "reveal-md",
+  "name": "@patarapolw/reveal-md-cli",
   "version": "0.1.0",
   "description": "Reveal.js x Markdown (Showdown.js) editor and CLI.",
   "main": "index.js",
@@ -7,7 +7,7 @@
     "reveal-md": "bin/cli.js"
   },
   "scripts": {
-    "start": "node bin/cli.js .",
+    "start": "node ./bin/cli.js .",
     "preinstall": "cd ./web && npm i && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
