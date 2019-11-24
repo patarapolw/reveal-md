@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "node bin/cli.js .",
-    "preinstall": "cd web && npm i && npm run build",
+    "preinstall": "cd ./web && npm i && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
