@@ -15,11 +15,13 @@ Positionals:
   filename  Path to the file to read
 
 Options:
-  --version    Show version number                                     [boolean]
-  --edit, -e   Edit the file in editor                                 [boolean]
-  --media, -m  Path to media folder                                     [string]
-  --no-media   No media should be loaded                               [boolean]
-  --help       Show help                                               [boolean]
+  --version     Show version number                                    [boolean]
+  --edit, -e    Edit the file in editor                                [boolean]
+  --media, -m   Path to media folder                                    [string]
+  --no-media    No media should be loaded                              [boolean]
+  --global, -g  Path to global folder                                   [string]
+  --no-global   No global should be loaded                             [boolean]
+  --help        Show help                                              [boolean]
 ```
 
 ## Adding media to reveal-md
@@ -28,13 +30,14 @@ By default, media can be put in the folder `media/` alongside the `*.md` file. T
 
 ## Global and Hidden slides
 
-- Global scripting `<script></script>` and styling `<style></style>` is supported in slides marked with
+- Global styling `<style></style>` is supported in slides marked with
 
 ```markdown
 // global
 content (Pug or HTML or extended Markdown)
 ```
 
+- Global scripting, also possible with `<script></script>`, is better done with `global/` folder alongside `*.md` file. (Which will be executed via `eval()`.)s
 - The slides marked with `// global` or `// hidden` will be hidden.
 
 ## Examples

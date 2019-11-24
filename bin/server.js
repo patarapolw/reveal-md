@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const open = require("open");
 const qs = require("querystring");
+const glob = require("fast-glob");
 
 function initServer(config) {
   function resolveFilename(s) {
@@ -42,6 +43,21 @@ function initServer(config) {
 
   if (config.media) {
     app.use("/media", express.static(config.media));
+    app.get("/media/", (req, res) => {
+      return res.json({
+        all: glob.sync(`${config.media}/**/*.*`).map((el) => path.relative(config.media, el))
+      })
+    });
+  }
+
+  if (config.global) {
+    app.use("/global", express.static(config.global));
+    app.get("/global/", (req, res) => {
+      return res.json({
+        css: glob.sync(`${config.global}/**/*.css`).map((el) => path.relative(config.global, el)),
+        js: glob.sync(`${config.global}/**/*.js`).map((el) => path.relative(config.global, el))
+      })
+    });
   }
 
   app.use(express.static(path.join(__dirname, "../web/dist")));
@@ -50,12 +66,14 @@ function initServer(config) {
   app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 
-    if (!config.filename || config.edit) {
-      open(`http://localhost:${port}`);
-    } else {
-      open(`http://localhost:${port}/reveal.html?${qs.stringify({
-        filename: this.filename
-      })}`);
+    if (!process.env.NO_OPEN) {
+      if (!config.filename || config.edit) {
+        open(`http://localhost:${port}`);
+      } else {
+        open(`http://localhost:${port}/reveal.html?${qs.stringify({
+          filename: this.filename
+        })}`);
+      }
     }
   });
 }

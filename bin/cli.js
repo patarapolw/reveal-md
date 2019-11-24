@@ -28,10 +28,19 @@ const { argv } = yargs
     type: "boolean",
     describe: "No media should be loaded"
   })
+  .option("global", {
+    alias: "g",
+    type: "string",
+    describe: "Path to global folder"
+  })
+  .option("no-global", {
+    type: "boolean",
+    describe: "No global should be loaded"
+  })
   .coerce(["media", "plugin", "filename"], path.resolve)
   .help();
 
-let { edit, filename, media } = argv;
+let { edit, filename, media, global } = argv;
 let dirTree;
 let root = filename;
 
@@ -49,6 +58,7 @@ initServer({
   edit,
   filename,
   dirTree,
-  media: argv["no-media"] ? null : media || dirTree ? dirTree.path : path.join(root, "media"),
+  media: argv["no-media"] ? null : media || path.join(root, "media"),
+  global: argv["no-global"] ? null : global || path.join(root, "global"),
   root
 });
