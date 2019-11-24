@@ -94,12 +94,6 @@ By default, media can be put in the folder `media/` alongside the `*.md` file. T
 
 ===
 
-## Adding plugins to reveal-md
-
-Also `plugin/` folder alongside `*.md` file will be loaded. Can be disabled using `--no-plugin` flag. For example, see <https://github.com/patarapolw/flatsrs>
-
-===
-
 ## Save as HTML (and associated assets folder)
 
 This is best done by [downloading complete web page, in associated web browser](https://www.makeuseof.com/tag/save-complete-webpage-offline-reading/).

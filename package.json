@@ -9,6 +9,8 @@
   "scripts": {
     "start": "node ./bin/cli.js .",
     "help": "node ./bin/cli.js --help",
+    "build": "cd web && npm run build",
+    "deploy": "cd web && npm run gh:deploy",
     "preinstall": "git submodule update --init --recursive && cd ./web && npm i && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

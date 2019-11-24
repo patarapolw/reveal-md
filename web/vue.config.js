@@ -1,13 +1,15 @@
 const fs = require("fs");
 const path = require("path");
 
+let baseUrl = "/"; 
+
 if (process.env.GITHUB) {
   const exampleFile = path.join(__dirname, "readme-slides.md");
   process.env.VUE_APP_PLACEHOLDER = fs.readFileSync(exampleFile, "utf-8");
   process.env.VUE_APP_TITLE = exampleFile;
-}
 
-const baseUrl = "/"; 
+  baseUrl = "/reveal-md/";
+}
 
 process.env.VUE_APP_REVEAL_CDN = (
   fs.existsSync(path.join(__dirname, "public", "reveal.js")) && 
