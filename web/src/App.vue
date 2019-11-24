@@ -3,7 +3,7 @@
   .navbar
     span.mr-3 Press F to enter fullscreen
     .ml-auto
-      b-button.mr-3(v-if="dirTree" variant="light" @click="isChooseFile = true") Choose file
+      b-button.mr-3(:disabled="!dirTree" variant="light" @click="isChooseFile = true") Choose file
       b-button.mr-3(variant="light" @click="showPreview = !showPreview") {{showPreview ? "Hide Preview" : "Show Preview"}}
       b-button.mr-3(variant="light" :disabled="!canSave" @click="saveMarkdown") Save
       //- b-button.mr-3(variant="light" :disabled="!raw" @click="saveHTML") Download HTML

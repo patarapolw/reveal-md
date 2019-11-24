@@ -1,11 +1,11 @@
 const fs = require("fs");
 const path = require("path");
 
-// if (process.env.NODE_ENV !== "production") {
-//   const exampleFile = path.join(__dirname, "readme-slides.md");
-//   process.env.VUE_APP_PLACEHOLDER = fs.readFileSync(exampleFile, "utf-8");
-//   process.env.VUE_APP_TITLE = exampleFile;
-// }
+if (process.env.GITHUB) {
+  const exampleFile = path.join(__dirname, "readme-slides.md");
+  process.env.VUE_APP_PLACEHOLDER = fs.readFileSync(exampleFile, "utf-8");
+  process.env.VUE_APP_TITLE = exampleFile;
+}
 
 const baseUrl = "/"; 
 

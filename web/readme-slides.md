@@ -79,13 +79,11 @@ Positionals:
   filename  Path to the file to read
 
 Options:
-  --version     Show version number                                    [boolean]
-  --edit, -e    Edit the file in editor                                [boolean]
-  --media, -m   Path to media folder                                    [string]
-  --plugin, -p  Path to plugin folder                                   [string]
-  --no-media    No media should be loaded                              [boolean]
-  --no-plugin   No plugin should be loaded                             [boolean]
-  --help        Show help                                              [boolean]
+  --version    Show version number                                     [boolean]
+  --edit, -e   Edit the file in editor                                 [boolean]
+  --media, -m  Path to media folder                                     [string]
+  --no-media   No media should be loaded                               [boolean]
+  --help       Show help                                               [boolean]
 ```
 
 ===

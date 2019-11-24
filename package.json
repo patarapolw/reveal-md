@@ -8,6 +8,7 @@
   },
   "scripts": {
     "start": "node ./bin/cli.js .",
+    "help": "node ./bin/cli.js --help",
     "preinstall": "git submodule update --init --recursive && cd ./web && npm i && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

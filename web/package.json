@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "gh:dev": "GITHUB=1 vue-cli-service serve",
+    "gh:deploy": "GITHUB=1 vue-cli-service build && gh-pages -d dist",
+    "dev": "vue-cli-service serve",
     "build": "vue-cli-service build"
   },
   "dependencies": {
@@ -33,6 +35,7 @@
   "devDependencies": {
     "@vue/cli-plugin-typescript": "^4.0.0",
     "@vue/cli-service": "^4.0.0",
+    "gh-pages": "^2.1.1",
     "sass": "^1.19.0",
     "sass-loader": "^8.0.0",
     "typescript": "~3.5.3",
