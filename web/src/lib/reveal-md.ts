@@ -196,6 +196,9 @@ export class RevealMd {
                     global.appendChild(el);
                   }
                   el.innerHTML = sectionRaw.content;
+                  Array.from(el.getElementsByTagName("script")).forEach((el) => {
+                    eval(el.innerHTML);
+                  });
                 }
               }
   
@@ -209,12 +212,18 @@ export class RevealMd {
                 if (!el) {
                   el = document.createElement("div");
                   el.id = `global--${CSS.escape(ref)}`;
-                  global.appendChild(el);
                 }
                 const url = new URL("/api/data", location.origin);
                 url.searchParams.set("filename", ref);
                 fetch(url.href).then((r) => r.text()).then((r) => {
-                  el!.innerHTML = this.parseSlide(r).content;
+                  if (r) {
+                    el = el!;
+                    el.innerHTML = this.parseSlide(r).content;
+                    global.appendChild(el);
+                    Array.from(el.getElementsByTagName("script")).forEach((el) => {
+                      eval(el.innerHTML);
+                    });
+                  }
                 })
               }
             }

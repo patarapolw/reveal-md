@@ -9,7 +9,7 @@ const qs = require("querystring");
 
 function initServer(config) {
   function resolveFilename(s) {
-    s = s.replace(/^@\//, config.root);
+    s = s.replace(/^@\//, config.root + "/");
     return path.resolve(config.filename ? path.relative(config.filename, s) : s);
   }
 
@@ -22,7 +22,11 @@ function initServer(config) {
 
   router.get("/data", (req, res) => {
     const { filename } = req.query;
-    return res.send(fs.readFileSync(resolveFilename(filename), "utf8"))
+    try {
+      return res.send(fs.readFileSync(resolveFilename(filename), "utf8"));
+    } catch(e) {
+      return res.send("");
+    }
   });
 
   router.put("/data", bodyParser.json(), (req, res) => {
