@@ -1,58 +1,32 @@
 {
-  "name": "@patarapolw/reveal-md-cli",
-  "version": "1.0.0",
-  "private": true,
+  "name": "reveal-md",
+  "version": "0.1.0",
+  "description": "Reveal.js x Markdown (Showdown.js) editor and CLI.",
+  "main": "index.js",
   "bin": {
-    "reveal-md": "./bin/cli.js"
+    "reveal-md": "bin/cli.js"
   },
   "scripts": {
-    "preinstall": "git submodule update -i -r",
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "deploy": "npm run build && gh-pages -d dist",
-    "release": "npm-github-release"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "dependencies": {
-    "@patarapolw/reveal-md-core": "file:lib/reveal-md-core",
-    "@types/codemirror": "0.0.80",
-    "@types/express": "^4.17.2",
-    "@types/node": "^12.12.11",
-    "@types/yargs": "^13.0.3",
-    "@vue/cli-plugin-typescript": "^4.0.0",
-    "@vue/cli-service": "^4.0.0",
-    "bootstrap": "^4.3.1",
-    "bootstrap-vue": "^2.1.0",
-    "codemirror": "^5.49.2",
-    "express": "^4.17.1",
-    "gray-matter": "^4.0.2",
-    "sanitize-filename": "^1.6.3",
-    "sass": "^1.19.0",
-    "sass-loader": "^8.0.0",
-    "typescript": "~3.5.3",
-    "vue": "^2.6.10",
-    "vue-class-component": "^7.0.2",
-    "vue-cli-plugin-pug": "^1.0.7",
-    "vue-codemirror": "^4.0.6",
-    "vue-mq": "^1.0.1",
-    "vue-property-decorator": "^8.3.0",
-    "vue-template-compiler": "^2.6.10",
-    "yargs": "^15.0.2"
-  },
-  "devDependencies": {
-    "gh-pages": "^2.1.1",
-    "npm-github-release": "^0.12.0"
-  },
-  "postcss": {
-    "plugins": {
-      "autoprefixer": {}
-    }
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/patarapolw/reveal-md.git"
+  },
+  "keywords": [
+    "reveal.js",
+    "showdown.js"
+  ],
+  "author": "Pacharapol Withayasakpunt <patarapolw@gmail.com> (https://polvcode.dev)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/patarapolw/reveal-md/issues"
+  },
+  "homepage": "https://github.com/patarapolw/reveal-md#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "open": "^7.0.0",
+    "yargs": "^15.0.2"
   }
 }

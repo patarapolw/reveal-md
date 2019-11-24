@@ -2,7 +2,7 @@
 
 const yargs = require("yargs");
 const path = require("path");
-const { spawnSync } = require("child_process");
+const { initServer } = require("./server");
 
 const { argv } = yargs
   .scriptName("reveal-md")
@@ -22,34 +22,17 @@ const { argv } = yargs
     type: "string",
     describe: "Path to media folder"
   })
-  .option("plugin", {
-    alias: "p",
-    type: "string",
-    describe: "Path to plugin folder"
-  })
   .option("no-media", {
     type: "boolean",
     describe: "No media should be loaded"
-  })
-  .option("no-plugin", {
-    type: "boolean",
-    describe: "No plugin should be loaded"
   })
   .coerce(["media", "plugin", "filename"], path.resolve)
   .help();
 
 const { edit, filename, media, plugin } = argv;
 
-const r = spawnSync(path.join(__dirname, "../node_modules/.bin/vue-cli-service"), ["serve"], {
-  env: {
-    ...process.env,
-    CONFIG: JSON.stringify({
-      edit,
-      filename,
-      media: argv["no-media"] ? null : media,
-      plugin: argv["no-plugin"] ? null : plugin
-    })
-  },
-  cwd: path.dirname(__dirname),
-  stdio: "inherit"
+initServer({
+  edit,
+  filename,
+  media: argv["no-media"] ? null : media || path.join(path.dirname(filename), "media")
 });

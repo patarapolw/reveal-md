@@ -10,15 +10,19 @@
         img(src="./assets/github.svg")
   .editor(:class="showPreview ? ($mq === 'mobile' ? 'hidden' : 'w-50') : 'w-100'")
     codemirror.codemirror(ref="cm" v-model="raw" :options="cmOptions" @input="onCmCodeChange")
-  iframe(ref="iframe" src="reveal.html" frameborder="0"
+  iframe(ref="iframe" :src="iframeUrl" frameborder="0"
   :class="showPreview ? ($mq === 'mobile' ? 'w-100' : 'w-50') : 'hidden'")
 </template>
 
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import matter from "gray-matter";
-import RevealMd from "@patarapolw/reveal-md-core";
+import RevealMd from "./lib/reveal-md";
 import sanitize from "sanitize-filename";
+
+declare global {
+  const process: any;
+}
 
 @Component
 export default class App extends Vue {
@@ -34,8 +38,8 @@ export default class App extends Vue {
   offset: number = 0;
   showPreview = (this as any).$mq !== "mobile";
   headers: any = {};
-  title = process.env.VUE_APP_TITLE || "";
-  isReadFile = !!process.env.VUE_APP_READ_FILE;
+  title = "";
+  filename = "";
 
   canSave = false;
 
@@ -54,6 +58,17 @@ export default class App extends Vue {
     }
   }
 
+  get iframeUrl() {
+    if (this.filename) {
+      const url = new URL("/reveal.html", location.origin);
+      url.searchParams.set("filename", this.filename);
+
+      return url.href;
+    }
+    
+    return "reveal.html";
+  }
+
   onIFrameReady(fn: () => void) {
     const toLoad = () => {
       this.iframeWindow.revealMd.onReady(() => {
@@ -69,7 +84,28 @@ export default class App extends Vue {
     }
   }
 
-  async mounted() {
+  created() {
+    const q = new URL(location.href).searchParams.get("q");
+
+    if (q) {
+      fetch(q).then((r) => r.text()).then((r) => {
+        this.raw = r;
+      })
+    } else if (!process.env.VUE_APP_PLACEHOLDER) {
+      fetch("/api").then((r) => r.json()).then((r) => {
+        this.filename = r.filename;
+        document.getElementsByTagName("title")[0].innerText = this.filename.split("/").pop();
+
+        const url = new URL("/api/data", location.origin);
+        url.searchParams.set("filename", r.filename);
+        fetch(url.href).then((r2) => r2.text()).then((r2) => {
+          this.raw = r2;
+        }).catch((e) => console.error(e));
+      }).catch((e) => console.error(e));
+    }
+  }
+
+  mounted() {
     this.codemirror.addKeyMap({
       "Cmd-P": () => {this.showPreview = !this.showPreview},
       "Ctrl-P": () => {this.showPreview = !this.showPreview},
@@ -79,13 +115,6 @@ export default class App extends Vue {
     this.codemirror.on("cursorActivity", (instance) => {
       this.line = instance.getCursor().line - this.offset;
     });
-    const url = new URL(location.href).searchParams.get("q") || "";
-    if (url) {
-      this.raw = await ((await fetch(url)).text());
-    } else if (this.isReadFile) {
-      this.raw = await ((await fetch("/data")).text());
-    }
-    
     this.onCmCodeChange();
   }
 
@@ -105,7 +134,7 @@ export default class App extends Vue {
       title.innerText = `Editing: ${this.title}`;
     }
 
-    if (this.isReadFile && this.raw) {
+    if (this.filename && this.raw) {
       this.canSave = true;
     }
 
@@ -155,20 +184,25 @@ export default class App extends Vue {
   }
 
   saveMarkdown() {
-    fetch("/data", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({content: this.raw})
-    }).then((r) => {
-      if (r.status === 201) {
-        this.canSave = false;
-        // this.$bvModal.msgBoxOk("Saved");
-      } else {
-        this.$bvModal.msgBoxOk(`Cannot save: ${r.statusText}`);
-      }
-    })
+    if (this.filename) {
+      fetch("/api/data", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          filename: this.filename,
+          content: this.raw
+        })
+      }).then((r) => {
+        if (r.status === 201) {
+          this.canSave = false;
+          // this.$bvModal.msgBoxOk("Saved");
+        } else {
+          this.$bvModal.msgBoxOk(`Cannot save: ${r.statusText}`);
+        }
+      })
+    }
   }
 
   // saveHTML() {
