@@ -8,11 +8,6 @@ const open = require("open");
 const qs = require("querystring");
 
 function initServer(config) {
-  function resolveFilename(s) {
-    s = s.replace(/^@\//, config.root + "/");
-    return path.resolve(config.filename ? path.relative(config.filename, s) : s);
-  }
-
   const router = Router();
   router.use(cors());
 
@@ -23,16 +18,17 @@ function initServer(config) {
   router.get("/data", (req, res) => {
     const { filename } = req.query;
     try {
-      return res.send(fs.readFileSync(resolveFilename(filename), "utf8"));
+      return res.send(fs.readFileSync(path.resolve(config.root, filename), "utf8"));
     } catch(e) {
-      return res.send("");
+      console.error(e);
+      return res.sendStatus(500);
     }
   });
 
   router.put("/data", bodyParser.json(), (req, res) => {
     const { filename, content } = req.body;
 
-    fs.writeFileSync(resolveFilename(filename), content);
+    fs.writeFileSync(path.resolve(config.root, filename), content);
     return res.sendStatus(201);
   });
 
@@ -51,7 +47,7 @@ function initServer(config) {
         open(`http://localhost:${port}/`);
       } else {
         open(`http://localhost:${port}/reveal/?${qs.stringify({
-          filename: this.filename
+          filename: config.filename
         })}`);
       }
     }

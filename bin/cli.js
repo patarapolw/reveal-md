@@ -19,7 +19,7 @@ const { argv } = yargs
     type: "boolean",
     describe: "Edit the file in editor"
   })
-  .coerce(["filename"], path.resolve)
+  .coerce(["fileOrDir"], path.resolve)
   .help();
 
 let { edit, fileOrDir } = argv;
@@ -38,7 +38,7 @@ if (fs.statSync(fileOrDir).isDirectory()) {
 
 initServer({
   edit,
-  fileOrDir,
+  filename: fileOrDir,
   dirTree,
   root
 });

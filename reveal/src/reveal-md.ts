@@ -8,6 +8,7 @@ import scopeCss from "scope-css";
 import qs from "querystring";
 import stringify from "es6-json-stable-stringify";
 import plugins from "./plugins";
+import { getDefaultRevealOptions } from "./defaults";
 
 declare global {
   interface Window {
@@ -91,7 +92,9 @@ async function main() {
 }
 
 export default class RevealMd {
-  _headers: any = {};
+  _headers: RevealOptions & {
+    theme?: string
+  } = getDefaultRevealOptions();
   _queue: Array<(r?: RevealStatic) => void> = [];
   _markdown: string = "";
   _raw: ISlide[][] = [[]];
@@ -101,6 +104,8 @@ export default class RevealMd {
   }
 
   set headers(h) {
+    h = Object.assign(getDefaultRevealOptions(), h);
+
     if (stringify(this._headers) === stringify(h)) {
       return;
     }
