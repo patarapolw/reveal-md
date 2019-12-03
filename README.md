@@ -1,6 +1,6 @@
-# Reveal-md
+# [Reveal-md](https://patarapolw.github.io/reveal-md/reveal/)
 
-Reveal.js x Markdown (Showdown.js) editor, CLI and sole viewer.
+Reveal.js x Markdown (Showdown.js) editor, CLI and viewer.
 
 
 ## Features
