@@ -36,14 +36,15 @@ async function main() {
     markdown: ""
   }
 
-  if ((await fetch(`/reveal.js/js/reveal.js`, {
-    method: "HEAD"
-  })).status === 200) {
+  try {
+    await fetch(`/reveal.js/js/reveal.js`, {
+      method: "HEAD"
+    });
     revealCdn = "/reveal.js/";
     document.body.appendChild(Object.assign(document.createElement("script"), {
       src: `${revealCdn}js/reveal.js`
     }));
-  } else {
+  } catch(e) {
     document.body.appendChild(Object.assign(document.createElement("script"), {
       src: `${revealCdn}js/reveal.min.js`
     }));
