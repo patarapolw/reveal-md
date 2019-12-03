@@ -12,7 +12,7 @@
     "build": "node build.js",
     "build:readme": "node build-readme.js",
     "deploy": "BASE_URL=/reveal-md yarn build && gh-pages -d dist",
-    "preinstall": "git submodule update --init --recursive && yarn build",
+    "preinstall": "node preinstall.js && yarn build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
