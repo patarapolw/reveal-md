@@ -390,7 +390,7 @@ export default class RevealMd {
     });
 
     if (type === "global") {
-      document.body.insertAdjacentHTML("afterbegin", html);
+      document.body.insertAdjacentHTML("beforeend", html);
       return { html: "", raw, id, type };
     }
 
