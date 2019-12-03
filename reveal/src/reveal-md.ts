@@ -31,10 +31,12 @@ mdConverter.setFlavor("github");
 Object.values(plugins.markdown).map((v) => mdConverter.addExtension(v));
 
 async function main() {
+  const { data, content } = matter(process.env.VUE_APP_PLACEHOLDER || "");
+
   let defaults = {
-    headers: {},
-    markdown: process.env.VUE_APP_PLACEHOLDER || ""
-  }
+    headers: data,
+    markdown: content
+  };
 
   try {
     const r = await fetch(`/reveal.js/js/reveal.js`, {
