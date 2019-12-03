@@ -10,7 +10,7 @@
     "start": "node bin/cli.js .",
     "help": "node bin/cli.js --help",
     "build": "node build.js",
-    "deploy": "gh-pages -d dist",
+    "deploy": "yarn build && gh-pages -d dist",
     "preinstall": "git submodule update --init --recursive && yarn build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
