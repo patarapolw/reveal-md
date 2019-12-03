@@ -95,7 +95,8 @@ async function main() {
 
 export default class RevealMd {
   _headers: RevealOptions & {
-    theme?: string
+    theme?: string;
+    title?: string;
   } = {
     ...getDefaultRevealOptions(),
     dependencies: [
@@ -122,6 +123,7 @@ export default class RevealMd {
 
     this.onReady((reveal) => {
       this.theme = h.theme || "white";
+      this.title = h.title || "";
 
       if (reveal) {
         reveal.configure(h);
@@ -219,6 +221,20 @@ export default class RevealMd {
     this._raw = newRaw;
   }
 
+  get title() {
+    const el = document.getElementsByTagName("title")[0];
+    return el ? el.innerText : "";
+  }
+
+  set title(t) {
+    let el = document.getElementsByTagName("title")[0];
+    if (!el) {
+      el = document.createElement("title");
+      document.head.appendChild(el);
+    }
+    el.innerText = t;
+  }
+
   get theme() {
     const el = document.getElementById("reveal-theme") as HTMLLinkElement;
     const m = /\/(\S+)\.css$/.exec(el.href);
@@ -304,6 +320,7 @@ export default class RevealMd {
       return { html: "", raw, id, type };
     } else if (newType === "global") {
       type = "global";
+      html = lines.join("\n");
     }
 
     html = html.replace(/(?:^|\n)\/\/ css=([A-Za-z0-9\-_]+\.css)(?:$|\n)/g, (p0, ref: string) => {
@@ -365,6 +382,7 @@ export default class RevealMd {
     });
 
     if (type === "global") {
+      document.body.insertAdjacentHTML("afterbegin", html);
       return { html: "", raw, id, type };
     }
 
