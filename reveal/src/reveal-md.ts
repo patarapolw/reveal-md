@@ -67,11 +67,6 @@ async function main() {
     id: "reveal-theme"
   }));
 
-  document.body.appendChild(Object.assign(document.createElement("script"), {
-    src: `${revealCdn}plugin/highlight/highlight.js`,
-    async: true
-  }));
-
   const url = new URL(location.href);
   const q = url.searchParams.get("q");
   if (q) {
@@ -99,7 +94,15 @@ async function main() {
 export default class RevealMd {
   _headers: RevealOptions & {
     theme?: string
-  } = getDefaultRevealOptions();
+  } = {
+    ...getDefaultRevealOptions(),
+    dependencies: [
+      {
+        src: `${revealCdn}plugin/highlight/highlight.js`,
+        async: true
+      }
+    ]
+  };
   _queue: Array<(r?: RevealStatic) => void> = [];
   _markdown: string = "";
   _raw: ISlide[][] = [[]];
