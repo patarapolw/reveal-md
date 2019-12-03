@@ -33,7 +33,7 @@ Object.values(plugins.markdown).map((v) => mdConverter.addExtension(v));
 async function main() {
   let defaults = {
     headers: {},
-    markdown: ""
+    markdown: process.env.VUE_APP_PLACEHOLDER || ""
   }
 
   try {
