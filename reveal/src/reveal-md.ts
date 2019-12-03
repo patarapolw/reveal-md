@@ -10,6 +10,8 @@ import stringify from "es6-json-stable-stringify";
 import plugins from "./plugins";
 import { getDefaultRevealOptions } from "./defaults";
 
+const currentSlide = location.hash;
+
 declare global {
   interface Window {
     Reveal: RevealStatic;
@@ -94,45 +96,39 @@ async function main() {
 }
 
 export default class RevealMd {
-  _headers: RevealOptions & {
-    theme?: string;
-    title?: string;
-  } = {
-    ...getDefaultRevealOptions(),
-    dependencies: [
-      {
-        src: `${revealCdn}plugin/highlight/highlight.js`,
-        async: true
-      }
-    ]
-  };
+  _headers: RevealOptions | null = null;
   _queue: Array<(r?: RevealStatic) => void> = [];
   _markdown: string = "";
   _raw: ISlide[][] = [[]];
 
-  get headers() {
-    return this._headers;
+  get headers(): RevealOptions & {
+    theme?: string;
+    title?: string;
+  } {
+    return this._headers || getDefaultRevealOptions();
   }
 
   set headers(h) {
-    h = Object.assign(getDefaultRevealOptions(), h);
+    let { theme, title, ...subH } = h;
 
-    if (stringify(this._headers) === stringify(h)) {
+    this.theme = theme || "white";
+    this.title = title || "";
+
+    subH = Object.assign(getDefaultRevealOptions(), subH);
+
+    if (stringify(this._headers) === stringify(subH)) {
       return;
     }
 
     this.onReady((reveal) => {
-      this.theme = h.theme || "white";
-      this.title = h.title || "";
-
       if (reveal) {
-        reveal.configure(h);
+        reveal.configure(subH);
         reveal.slide(-1, -1, -1);
         reveal.sync();
       }
     });
 
-    this._headers = h;
+    this._headers = subH;
   }
 
   get markdown() {
@@ -254,6 +250,11 @@ export default class RevealMd {
     window.revealMd = this;
     this.markdown = defaults.markdown;
     this.headers = defaults.headers;
+    this.onReady(() => {
+      if (currentSlide) {
+        location.hash = currentSlide;
+      }
+    });
   }
 
   update(raw: string) {
@@ -281,8 +282,15 @@ export default class RevealMd {
     const reveal = window.Reveal;
     if (reveal) {
       if (!reveal.isReady()) {
-        reveal.initialize();
-        if (this._queue && this._queue.length > 0) {
+        reveal.initialize({
+          dependencies: [
+            {
+              src: `${revealCdn}plugin/highlight/highlight.js`,
+              async: true
+            }
+          ]
+        });
+        if (this._queue.length > 0) {
           this._queue.forEach(it => it(reveal));
           reveal.slide(-1, -1, -1);
           reveal.sync();
