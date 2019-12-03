@@ -79,7 +79,9 @@ export default class App extends Vue {
       if (this.iframeWindow.revealMd) {
         toLoad();
       } else {
-        this.iframeWindow.onload = toLoad;
+        setTimeout(() => {
+          this.onIFrameReady(fn);
+        }, 1000);
       }
     }
   }

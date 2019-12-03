@@ -43,7 +43,7 @@ HTML is also supported.
 <small>Small character</small>
 ```
 
-Furthermore, you can reference other online CSS via
+Furthermore, you can reference other online CSS urls via
 - `// css=<URL>`
 
 
@@ -98,6 +98,14 @@ Using web crawlers, like <https://github.com/website-scraper/node-website-scrape
 ## Online viewer
 
 You can do it at <https://patarapolw.github.io/reveal-md/reveal/?q=\<YOUR_URL_HERE>>
+
+
+## Create your own version
+
+- Clone this project
+- Build `/editor/` and/or `/reveal/`, and the following environmental variables can be set if needed.
+  - `BASE_URL=` -- needed for GitHub Pages
+  - `NO_EDITOR=` -- if you don't want to build the editor. Build the `/reveal/index.html` only.
 
 
 ## Duplicated projects
