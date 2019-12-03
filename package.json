@@ -8,6 +8,7 @@
   },
   "scripts": {
     "start": "node bin/cli.js .",
+    "readme": "node bin/cli.js readme-reveal.md",
     "help": "node bin/cli.js --help",
     "build": "node build.js",
     "build:readme": "node build-readme.js",
