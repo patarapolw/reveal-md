@@ -37,9 +37,13 @@ async function main() {
   }
 
   try {
-    await fetch(`/reveal.js/js/reveal.js`, {
+    const r = await fetch(`/reveal.js/js/reveal.js`, {
       method: "HEAD"
     });
+    if (r.status !== 200) {
+      throw new Error();
+    }
+
     revealCdn = "/reveal.js/";
     document.body.appendChild(Object.assign(document.createElement("script"), {
       src: `${revealCdn}js/reveal.js`
