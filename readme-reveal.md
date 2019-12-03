@@ -35,7 +35,7 @@ Reveal.js x Markdown (Showdown.js) editor, CLI and viewer.
 
 ## Features
 
-- Read Reveal Markdown (Reveal-md) online at <https://patarapolw.github.io/reveal-md/reveal/?q=\<URL>>
+- Read Reveal Markdown (Reveal-md) online at `https://patarapolw.github.io/reveal-md/reveal/?q=<URL>`
 - CLI script to editor and read Reveal-md totally offline (no internet connection needed)
 - Customizable via `git clone` / `git submodule add`, then edit these files
   - [/reveal/src/index.scss](/reveal/src/index.scss)
@@ -156,7 +156,7 @@ Using web crawlers, like <https://github.com/website-scraper/node-website-scrape
 
 ## Online viewer
 
-You can do it at <https://patarapolw.github.io/reveal-md/reveal/?q=\<YOUR_URL_HERE>>
+You can do it at `https://patarapolw.github.io/reveal-md/reveal/?q=<YOUR_URL_HERE>`
 
 ===
 
