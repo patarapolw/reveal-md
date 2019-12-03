@@ -23,6 +23,6 @@
   },
   "scripts": {
     "clean": "rm -rf ../dist/reveal",
-    "build": "parcel build src/index.pug --public-url /reveal-md/reveal --out-dir ../dist/reveal"
+    "build": "parcel build src/index.pug --public-url ${BASE_URL}/reveal --out-dir ../dist/reveal"
   }
 }

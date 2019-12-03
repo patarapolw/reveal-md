@@ -1,26 +1,31 @@
 const { spawnSync } = require("child_process");
+const path = require("path");
+
+const editorPath = path.join(__dirname, "editor");
 
 spawnSync("yarn", ["install"], {
   stdio: "inherit",
-  cwd: "editor"
-})
+  cwd: editorPath
+});
 
 spawnSync("yarn", ["build"], {
   stdio: "inherit",
-  cwd: "editor"
-})
+  cwd: editorPath
+});
+
+const revealPath = path.join(__dirname, "reveal");
 
 spawnSync("yarn", ["install"], {
   stdio: "inherit",
-  cwd: "reveal"
-})
+  cwd: revealPath
+});
 
-spawnSync("yarn", ["clean"], {
-  stdio: "inherit",
-  cwd: "reveal"
-})
+// spawnSync("yarn", ["clean"], {
+//   stdio: "inherit",
+//   cwd: revealPath
+// });
 
 spawnSync("yarn", ["build"], {
   stdio: "inherit",
-  cwd: "reveal"
-})
+  cwd: revealPath
+});

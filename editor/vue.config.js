@@ -1,7 +1,9 @@
 const serveStatic = require("serve-static");
 const fs = require("fs");
 
-process.env.VUE_APP_PLACEHOLDER = fs.readFileSync("../readme-editor.md", "utf8");
+process.env.VUE_APP_PLACEHOLDER = fs.readFileSync("../readme-reveal.md", "utf8");
+
+const baseUrl = process.env.BASE_URL || "";
 
 module.exports = {
   devServer: {
@@ -11,9 +13,9 @@ module.exports = {
       }
     },
     before(app) {
-      app.use("/reveal-md/reveal", serveStatic("../dist/reveal"));
+      app.use(`${baseUrl}/reveal`, serveStatic("../dist/reveal"));
     }
   },
-  publicPath: "/reveal-md",
+  publicPath: baseUrl,
   outputDir: "../dist"
 };

@@ -58,13 +58,15 @@ export default class App extends Vue {
   }
 
   get iframeUrl() {
+    const defaultUrl = `${process.env.BASE_URL}/reveal/`;
+
     if (this.filename) {
-      const url = new URL("/reveal-md/reveal/", location.origin);
+      const url = new URL(defaultUrl, location.origin);
       url.searchParams.set("filename", this.filename);
       return url.href;
     }
     
-    return "/reveal-md/reveal/";
+    return defaultUrl;
   }
 
   onIFrameReady(fn: () => void) {

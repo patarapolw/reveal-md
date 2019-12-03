@@ -10,7 +10,8 @@
     "start": "node bin/cli.js .",
     "help": "node bin/cli.js --help",
     "build": "node build.js",
-    "deploy": "yarn build && gh-pages -d dist",
+    "build:readme": "node build-readme.js",
+    "deploy": "BASE_URL=/reveal-md yarn build && gh-pages -d dist",
     "preinstall": "git submodule update --init --recursive && yarn build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -36,6 +37,13 @@
     "yargs": "^15.0.2"
   },
   "devDependencies": {
-    "gh-pages": "^2.1.1"
+    "gh-pages": "^2.1.1",
+    "gray-matter": "^4.0.2",
+    "husky": "^3.1.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn build:readme && git add README.md"
+    }
   }
 }

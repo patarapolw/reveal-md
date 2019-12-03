@@ -6,7 +6,8 @@ import matter from "gray-matter";
 // @ts-ignore
 import scopeCss from "scope-css";
 import qs from "querystring";
-import stringify from "es6-json-stable-stringify"
+import stringify from "es6-json-stable-stringify";
+import plugins from "./plugins";
 
 declare global {
   interface Window {
@@ -26,6 +27,7 @@ export interface ISlide {
 let revealCdn = "https://cdn.jsdelivr.net/npm/reveal.js@3.8.0/";
 const mdConverter = new showdown.Converter();
 mdConverter.setFlavor("github");
+Object.values(plugins.markdown).map((v) => mdConverter.addExtension(v));
 
 async function main() {
   let defaults = {
@@ -65,14 +67,23 @@ async function main() {
   }));
 
   const url = new URL(location.href);
-  const filename = url.searchParams.get("filename");
-  if (filename) {
-    const { data, content } = matter(await fetch(`/api/data?${qs.stringify({
-      filename
-    })}`).then((r) => r.text()));
+  const q = url.searchParams.get("q");
+  if (q) {
+    const { data, content } = matter(await fetch(q).then((r) => r.text()));
     defaults = {
       headers: data,
       markdown: content
+    }
+  } else {
+    const filename = url.searchParams.get("filename");
+    if (filename) {
+      const { data, content } = matter(await fetch(`/api/data?${qs.stringify({
+        filename
+      })}`).then((r) => r.text()));
+      defaults = {
+        headers: data,
+        markdown: content
+      }
     }
   }
   
@@ -227,9 +238,10 @@ export default class RevealMd {
   pugConvert(s: string) {
     return pug.compile({
       filters: {
-        markdown: ss => {
+        markdown: (ss) => {
           return this.mdConvert(ss);
-        }
+        },
+        ...plugins.pug
       }
     })(s);
   }
@@ -279,7 +291,7 @@ export default class RevealMd {
       type = "global";
     }
 
-    html = html.replace(/(?:^|\n)\/\/ css=([A-Za-z0-9\-_]+\.css)(?:$|\n)/g, (p0, ref) => {
+    html = html.replace(/(?:^|\n)\/\/ css=([A-Za-z0-9\-_]+\.css)(?:$|\n)/g, (p0, ref: string) => {
       const i = raw.indexOf(p0);
       const globalEl = document.getElementById("global") as HTMLDivElement;
       const className = `ref${i}`;
@@ -291,7 +303,14 @@ export default class RevealMd {
         globalEl.appendChild(el);
       }
 
-      fetch(ref).then((r) => r.text()).then((content) => {
+      let url = ref;
+      if (!ref.includes("://")) {
+        url = `/api/data?${qs.stringify({
+          filename: ref
+        })}`;
+      }
+
+      fetch(url).then((r) => r.text()).then((content) => {
         if (type !== "global") {
           content = scopeCss(content, `#${id}`)
         }
@@ -322,7 +341,9 @@ export default class RevealMd {
       } else if (lang === "pre") {
         return h("pre", content).outerHTML;
       } else if (lang === "pug") {
-        return this.pugConvert(html);
+        return this.pugConvert(content);
+      } else if (lang === "html") {
+        return content;
       }
 
       return p0;

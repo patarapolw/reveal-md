@@ -39,7 +39,7 @@ function initServer(config) {
   const app = express();
 
   app.use("/api", router);
-  app.use("/reveal-md", express.static(path.join(__dirname, "../dist")));
+  app.use(express.static(path.join(__dirname, "../dist")));
   app.use("/reveal.js", express.static(path.join(__dirname, "../reveal.js")))
 
   const port = process.env.PORT || 24000;
@@ -48,9 +48,9 @@ function initServer(config) {
 
     if (!process.env.NO_OPEN) {
       if (!config.filename || config.edit) {
-        open(`http://localhost:${port}/reveal-md/`);
+        open(`http://localhost:${port}/`);
       } else {
-        open(`http://localhost:${port}/reveal-md/reveal/?${qs.stringify({
+        open(`http://localhost:${port}/reveal/?${qs.stringify({
           filename: this.filename
         })}`);
       }
