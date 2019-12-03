@@ -6,7 +6,6 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const open = require("open");
 const qs = require("querystring");
-const glob = require("fast-glob");
 
 function initServer(config) {
   function resolveFilename(s) {
@@ -40,27 +39,8 @@ function initServer(config) {
   const app = express();
 
   app.use("/api", router);
-
-  if (config.media) {
-    app.use("/media", express.static(config.media));
-    app.get("/media/", (req, res) => {
-      return res.json({
-        all: glob.sync(`${config.media}/**/*.*`).map((el) => path.relative(config.media, el))
-      })
-    });
-  }
-
-  if (config.global) {
-    app.use("/global", express.static(config.global));
-    app.get("/global/", (req, res) => {
-      return res.json({
-        css: glob.sync(`${config.global}/**/*.css`).map((el) => path.relative(config.global, el)),
-        js: glob.sync(`${config.global}/**/*.js`).map((el) => path.relative(config.global, el))
-      })
-    });
-  }
-
-  app.use(express.static(path.join(__dirname, "../web/dist")));
+  app.use("/reveal-md", express.static(path.join(__dirname, "../dist")));
+  app.use("/reveal.js", express.static(path.join(__dirname, "../reveal.js")))
 
   const port = process.env.PORT || 24000;
   app.listen(port, () => {
@@ -68,9 +48,9 @@ function initServer(config) {
 
     if (!process.env.NO_OPEN) {
       if (!config.filename || config.edit) {
-        open(`http://localhost:${port}`);
+        open(`http://localhost:${port}/reveal-md/`);
       } else {
-        open(`http://localhost:${port}/reveal.html?${qs.stringify({
+        open(`http://localhost:${port}/reveal-md/reveal/?${qs.stringify({
           filename: this.filename
         })}`);
       }

@@ -11,33 +11,27 @@ ul.treeview
 
 <script lang="ts">
 import { Component, Vue, Watch, Prop, Emit } from 'vue-property-decorator';
-
 export interface ITreeview {
   name: string;
   children?: ITreeview[];
 }
-
 @Component({
   name: "treeview"
 })
 export default class Treeview extends Vue {
   @Prop() items!: ITreeview[];
   isOpen: Record<string, boolean> = {};
-
   filename = "";
-
   openItem(i: number) {
     this.$set(this.isOpen, i.toString(), !this.isOpen[i.toString()])
   }
-
   onItemClicked(it: any, i: number) {
     if (it.type === "directory") {
       this.openItem(i);
     } else if (it.extension === "md") {
-      this.filename = it.path;
+      this.filename = it.relativePath;
     }
   }
-
   @Watch("filename")
   @Emit("filename")
   emitFilename() {
@@ -51,16 +45,13 @@ export default class Treeview extends Vue {
   li {
     list-style-type: none;
   }
-
   .treeview-header {
     display: inline-block;
     width: 1em;
   }
-
   .treeview-body:hover {
     cursor: pointer;
   }
-
   .treeview-body.ext-md:hover {
     color: blue;
   }

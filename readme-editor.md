@@ -4,19 +4,18 @@ title: reveal-md
 theme: solarized  # try solarized, serif or white
 ---
 // global
-```pug
-style.
-  h1, h2, h3, h4, h5, h6 {
-    text-transform: uppercase !important;
-  }
-  
-  p, li {
-    font-size: 2rem;
-  }
-  
-  code {
-    color: red;
-  }
+```css
+h1, h2, h3, h4, h5, h6 {
+  text-transform: uppercase !important;
+}
+
+p, li {
+  font-size: 2rem;
+}
+
+code {
+  color: red;
+}
 ```
 ===
 
@@ -34,7 +33,7 @@ Reveal.js x Markdown (Showdown.js) editor and CLI.
 
 ```markdown
 // global
-content (Pug or HTML or extended Markdown)
+content (CSS, Pug, HTML or extended Markdown)
 ```
 
 - The slides marked with `// global` or `// hidden` will be hidden.

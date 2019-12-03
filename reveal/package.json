@@ -1,0 +1,28 @@
+{
+  "name": "reveal",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^12.12.14",
+    "parcel-bundler": "^1.12.4",
+    "pug": "^2.0.4",
+    "typescript": "^3.7.2"
+  },
+  "dependencies": {
+    "@types/highlight.js": "^9.12.3",
+    "@types/hyperscript": "^0.0.3",
+    "@types/showdown": "^1.9.3",
+    "es6-json-stable-stringify": "^2.0.2",
+    "gray-matter": "^4.0.2",
+    "highlight.js": "^9.16.2",
+    "hyperpug": "^0.2.1",
+    "hyperscript": "^2.0.2",
+    "scope-css": "^1.2.1",
+    "showdown": "^1.9.1"
+  },
+  "scripts": {
+    "clean": "rm -rf ../dist/reveal",
+    "build": "parcel build src/index.pug --public-url /reveal-md/reveal --out-dir ../dist/reveal"
+  }
+}

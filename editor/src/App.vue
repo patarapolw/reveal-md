@@ -6,13 +6,12 @@
       b-button.mr-3(:disabled="!dirTree" variant="light" @click="isChooseFile = true") Choose file
       b-button.mr-3(variant="light" @click="showPreview = !showPreview") {{showPreview ? "Hide Preview" : "Show Preview"}}
       b-button.mr-3(variant="light" :disabled="!canSave" @click="saveMarkdown") Save
-      //- b-button.mr-3(variant="light" :disabled="!raw" @click="saveHTML") Download HTML
       b-link(href="https://github.com/patarapolw/reveal-md")
         img(src="./assets/github.svg")
-  .editor(:class="showPreview ? ($mq === 'mobile' ? 'hidden' : 'w-50') : 'w-100'")
+  .editor(:class="showPreview ? 'w-50' : 'w-100'")
     codemirror.codemirror(ref="cm" v-model="raw" :options="cmOptions" @input="onCmCodeChange")
   iframe(ref="iframe" :src="iframeUrl" frameborder="0"
-  :class="showPreview ? ($mq === 'mobile' ? 'w-100' : 'w-50') : 'hidden'")
+  :class="showPreview ? 'w-50' : 'hidden'")
   b-modal(v-if="dirTree" v-model="isChooseFile" :title="dirTree.path" scrollable static)
     treeview(:items="dirTree.children" @filename="filename = $event")
 </template>
@@ -20,11 +19,7 @@
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import matter from "gray-matter";
-import RevealMd from "./lib/reveal-md";
-import sanitize from "sanitize-filename";
 import Treeview from "@/components/Treeview.vue";
-
-declare const process: any;
 
 @Component({
   components: {
@@ -38,17 +33,16 @@ export default class App extends Vue {
       base: "markdown"
     }
   }
-  raw = process.env.VUE_APP_PLACEHOLDER || "";
+  raw = "";
   markdown = "";
   line: number = 0;
   offset: number = 0;
-  showPreview = (this as any).$mq !== "mobile";
+  showPreview = true;
   headers: any = {};
   title = "";
   isChooseFile = false;
   filename = "";
   dirTree: any = null;
-
   canSave = false;
 
   get codemirror(): CodeMirror.Editor {
@@ -60,21 +54,17 @@ export default class App extends Vue {
   }
 
   get iframeWindow() {
-    return this.iframe.contentWindow as Window & {
-      Reveal: RevealStatic,
-      revealMd: RevealMd;
-    }
+    return this.iframe.contentWindow as any;
   }
 
   get iframeUrl() {
     if (this.filename) {
-      const url = new URL("/reveal.html", location.origin);
+      const url = new URL("/reveal-md/reveal/", location.origin);
       url.searchParams.set("filename", this.filename);
-
       return url.href;
     }
     
-    return "reveal.html";
+    return "/reveal-md/reveal/";
   }
 
   onIFrameReady(fn: () => void) {
@@ -92,24 +82,24 @@ export default class App extends Vue {
     }
   }
 
-  created() {
+  async created() {
     const q = new URL(location.href).searchParams.get("q");
-
     if (q) {
-      fetch(q).then((r) => r.text()).then((r) => {
-        this.raw = r;
-      })
-    } else if (!process.env.VUE_APP_PLACEHOLDER) {
-      fetch("/api/").then((r) => {
-        return r.json();
-      }).then((r) => {
+      this.raw = await fetch(q).then((r) => r.text());
+    } else {
+      try {
+        const r = await fetch("/api/").then((r) => r.json());
         if (r.filename) {
           this.openFile(r.filename);
-        } else {
+        } else if (r.dirTree) {
           this.dirTree = r.dirTree;
           this.isChooseFile = true;
+        } else {
+          this.raw = process.env.VUE_APP_PLACEHOLDER || "";
         }
-      }).catch((e) => console.error(e));
+      } catch(e) {
+        this.raw = process.env.VUE_APP_PLACEHOLDER || "";
+      }
     }
   }
 
@@ -129,10 +119,8 @@ export default class App extends Vue {
   @Watch("filename")
   openFile(filename: string) {
     this.isChooseFile = false;
-
     this.filename = filename;
     document.getElementsByTagName("title")[0].innerText = filename.split("/").pop()!;
-
     const url = new URL("/api/data", location.origin);
     url.searchParams.set("filename", filename);
     fetch(url.href).then((r2) => r2.text()).then((r2) => {
@@ -155,11 +143,9 @@ export default class App extends Vue {
     if (this.title && title) {
       title.innerText = `Editing: ${this.title}`;
     }
-
     if (this.filename && this.raw) {
       this.canSave = true;
     }
-
     this.onIFrameReady(() => {
       this.iframeWindow.revealMd.update(this.raw);
     });
@@ -170,36 +156,37 @@ export default class App extends Vue {
     if (this.line < 0) {
       return;
     }
-
     let slideNumber = 0;
     let stepNumber = 0;
     let i = 0;
-    let hiddenSlideCount = 0;
     let isHidden = false;
-
-    this.markdown.split(/\r?\n===\r?\n/g).map((s_el, s_i) => {
-      isHidden = false;
-
-      if (i <= this.line) {
-        slideNumber = s_i;
+    let xOffset = 0;
+    this.markdown.split(/\n===\n/g).map((s_el, x) => {
+      const ss_md = s_el.split(/\n--\n/g);
+      const ss_md_hidden = ss_md.map((ss_el) => ss_el.startsWith("// hidden\n") || ss_el.startsWith("// global\n"));
+      if (ss_md_hidden.every((el) => el)) {
+        xOffset++;
       }
 
-      s_el.split(/\r?\n--\r?\n/).map((ss_el, ss_i) => {
+      if (i <= this.line) {
+        slideNumber = x - xOffset;
+        isHidden = ss_md_hidden.every((el) => el)
+      }
+
+      let yOffset = 0;
+      ss_md.map((ss_el, y) => {
+        if (ss_md_hidden[y]) {
+          yOffset++;
+        }
+
         if (i <= this.line) {
-          stepNumber = ss_i;
+          stepNumber = y - yOffset;
+          isHidden = ss_md_hidden[y]
         }
 
         i += ss_el.split("\n").length + 1;
       });
-
-      if (["// hidden", "// global"].includes(s_el.split("\n")[0])) {
-        hiddenSlideCount++;
-        isHidden = true;
-      }
     });
-
-    slideNumber -= hiddenSlideCount;
-
     if (!isHidden && slideNumber >= 0) {
       this.iframeWindow.Reveal.slide(slideNumber, stepNumber);
     }
@@ -219,52 +206,35 @@ export default class App extends Vue {
       }).then((r) => {
         if (r.status === 201) {
           this.canSave = false;
-          // this.$bvModal.msgBoxOk("Saved");
         } else {
           this.$bvModal.msgBoxOk(`Cannot save: ${r.statusText}`);
         }
       })
     }
   }
-
-  // saveHTML() {
-  //   const a = document.createElement("a");
-  //   a.href = "/save";
-  //   a.download = `${sanitize(this.title)}.zip`;
-  //   a.style.display = "none";
-  //   document.body.appendChild(a);
-  //   a.click();
-  //   a.remove();
-  // }
 }
 </script>
 
 <style lang="scss">
 $navbar-height: 60px;
-
 html, body, #app {
   margin: 0;
   padding: 0;
   height: 100%;
   width: 100%;
 }
-
 .h-100 {
   height: 100%;
 }
-
 .w-100 {
   width: 100%;
 }
-
 .w-50 {
   width: 50%;
 }
-
 .hidden {
   display: none;
 }
-
 .navbar {
   display: flex;
   height: $navbar-height;
@@ -273,25 +243,20 @@ html, body, #app {
   overflow: auto;
   white-space: nowrap;
 }
-
 iframe {
   position: fixed;
   height: calc(100vh - 60px);
   top: $navbar-height;
-
   &.w-50 {
     left: 50vw;
   }
 }
-
 .editor {
   height: calc(100vh - 60px) !important;
-
   .CodeMirror {
     height: calc(100vh - 60px) !important;
   }
 }
-
 .CodeMirror {
   height: auto !important;
   width: 100%;

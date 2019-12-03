@@ -1,10 +1,8 @@
 {
-  "name": "web",
+  "name": "editor",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "gh:dev": "GITHUB=1 vue-cli-service serve",
-    "gh:deploy": "GITHUB=1 vue-cli-service build && gh-pages -d dist",
     "dev": "vue-cli-service serve",
     "build": "vue-cli-service build"
   },
@@ -12,39 +10,28 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.25",
     "@fortawesome/free-solid-svg-icons": "^5.11.2",
     "@fortawesome/vue-fontawesome": "^0.1.8",
-    "@types/codemirror": "0.0.80",
-    "@types/hyperscript": "0.0.3",
-    "@types/node": "^12.12.12",
-    "@types/showdown": "^1.9.3",
-    "bootstrap": "^4.3.1",
+    "@types/codemirror": "^0.0.81",
+    "@types/node": "^12.12.14",
+    "bootstrap": "^4.4.1",
     "bootstrap-vue": "^2.1.0",
     "codemirror": "^5.49.2",
+    "core-js": "^3.4.3",
     "gray-matter": "^4.0.2",
-    "hyperpug": "^0.2.1",
-    "hyperscript": "^2.0.2",
-    "pug": "^2.0.4",
-    "pug-plain-loader": "^1.0.0",
-    "sanitize-filename": "^1.6.3",
-    "showdown": "^1.9.1",
+    "serve-static": "^1.14.1",
     "vue": "^2.6.10",
     "vue-class-component": "^7.0.2",
     "vue-codemirror": "^4.0.6",
-    "vue-mq": "^1.0.1",
     "vue-property-decorator": "^8.3.0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-typescript": "^4.0.0",
-    "@vue/cli-service": "^4.0.0",
-    "gh-pages": "^2.1.1",
-    "sass": "^1.19.0",
+    "@vue/cli-plugin-babel": "^4.1.0",
+    "@vue/cli-plugin-typescript": "^4.1.0",
+    "@vue/cli-service": "^4.1.0",
+    "sass": "^1.23.7",
     "sass-loader": "^8.0.0",
     "typescript": "~3.5.3",
+    "vue-cli-plugin-pug": "^1.0.7",
     "vue-template-compiler": "^2.6.10"
-  },
-  "postcss": {
-    "plugins": {
-      "autoprefixer": {}
-    }
   },
   "browserslist": [
     "> 1%",
