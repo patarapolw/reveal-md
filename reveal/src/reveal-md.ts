@@ -70,7 +70,9 @@ async function main() {
   const url = new URL(location.href);
   const q = url.searchParams.get("q");
   if (q) {
-    const { data, content } = matter(await fetch(q).then((r) => r.text()));
+    const qUrl = new URL(q);
+    qUrl.searchParams.set("rand", Math.random().toString(36).substr(-5));
+    const { data, content } = matter(await fetch(qUrl.href).then((r) => r.text()));
     defaults = {
       headers: data,
       markdown: content
