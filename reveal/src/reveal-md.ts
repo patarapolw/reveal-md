@@ -10,6 +10,8 @@ import stringify from "es6-json-stable-stringify";
 import plugins from "./plugins";
 import { getDefaultRevealOptions } from "./defaults";
 
+const currentSlide = location.hash;
+
 declare global {
   interface Window {
     Reveal: RevealStatic;
@@ -31,19 +33,26 @@ mdConverter.setFlavor("github");
 Object.values(plugins.markdown).map((v) => mdConverter.addExtension(v));
 
 async function main() {
-  let defaults = {
-    headers: {},
-    markdown: ""
-  }
+  const { data, content } = matter(process.env.VUE_APP_PLACEHOLDER || "");
 
-  if ((await fetch(`/reveal.js/js/reveal.js`, {
-    method: "HEAD"
-  })).status === 200) {
+  let defaults = {
+    headers: data,
+    markdown: content
+  };
+
+  try {
+    const r = await fetch(`/reveal.js/js/reveal.js`, {
+      method: "HEAD"
+    });
+    if (r.status !== 200) {
+      throw new Error();
+    }
+
     revealCdn = "/reveal.js/";
     document.body.appendChild(Object.assign(document.createElement("script"), {
       src: `${revealCdn}js/reveal.js`
     }));
-  } else {
+  } catch(e) {
     document.body.appendChild(Object.assign(document.createElement("script"), {
       src: `${revealCdn}js/reveal.min.js`
     }));
@@ -60,11 +69,6 @@ async function main() {
     href: `${revealCdn}css/theme/white.css`,
     type: "text/css",
     id: "reveal-theme"
-  }));
-
-  document.body.appendChild(Object.assign(document.createElement("script"), {
-    src: `${revealCdn}plugin/highlight/highlight.js`,
-    async: true
   }));
 
   const url = new URL(location.href);
@@ -94,35 +98,39 @@ async function main() {
 }
 
 export default class RevealMd {
-  _headers: RevealOptions & {
-    theme?: string
-  } = getDefaultRevealOptions();
+  _headers: RevealOptions | null = null;
   _queue: Array<(r?: RevealStatic) => void> = [];
   _markdown: string = "";
   _raw: ISlide[][] = [[]];
 
-  get headers() {
-    return this._headers;
+  get headers(): RevealOptions & {
+    theme?: string;
+    title?: string;
+  } {
+    return this._headers || getDefaultRevealOptions();
   }
 
   set headers(h) {
-    h = Object.assign(getDefaultRevealOptions(), h);
+    let { theme, title, ...subH } = h;
 
-    if (stringify(this._headers) === stringify(h)) {
+    this.theme = theme || "white";
+    this.title = title || "";
+
+    subH = Object.assign(getDefaultRevealOptions(), subH);
+
+    if (stringify(this._headers) === stringify(subH)) {
       return;
     }
 
     this.onReady((reveal) => {
-      this.theme = h.theme || "white";
-
       if (reveal) {
-        reveal.configure(h);
+        reveal.configure(subH);
         reveal.slide(-1, -1, -1);
         reveal.sync();
       }
     });
 
-    this._headers = h;
+    this._headers = subH;
   }
 
   get markdown() {
@@ -211,6 +219,20 @@ export default class RevealMd {
     this._raw = newRaw;
   }
 
+  get title() {
+    const el = document.getElementsByTagName("title")[0];
+    return el ? el.innerText : "";
+  }
+
+  set title(t) {
+    let el = document.getElementsByTagName("title")[0];
+    if (!el) {
+      el = document.createElement("title");
+      document.head.appendChild(el);
+    }
+    el.innerText = t;
+  }
+
   get theme() {
     const el = document.getElementById("reveal-theme") as HTMLLinkElement;
     const m = /\/(\S+)\.css$/.exec(el.href);
@@ -230,6 +252,11 @@ export default class RevealMd {
     window.revealMd = this;
     this.markdown = defaults.markdown;
     this.headers = defaults.headers;
+    this.onReady(() => {
+      if (currentSlide) {
+        location.hash = currentSlide;
+      }
+    });
   }
 
   update(raw: string) {
@@ -257,8 +284,15 @@ export default class RevealMd {
     const reveal = window.Reveal;
     if (reveal) {
       if (!reveal.isReady()) {
-        reveal.initialize();
-        if (this._queue && this._queue.length > 0) {
+        reveal.initialize({
+          dependencies: [
+            {
+              src: `${revealCdn}plugin/highlight/highlight.js`,
+              async: true
+            }
+          ]
+        });
+        if (this._queue.length > 0) {
           this._queue.forEach(it => it(reveal));
           reveal.slide(-1, -1, -1);
           reveal.sync();
@@ -296,6 +330,7 @@ export default class RevealMd {
       return { html: "", raw, id, type };
     } else if (newType === "global") {
       type = "global";
+      html = lines.join("\n");
     }
 
     html = html.replace(/(?:^|\n)\/\/ css=([A-Za-z0-9\-_]+\.css)(?:$|\n)/g, (p0, ref: string) => {
@@ -357,6 +392,7 @@ export default class RevealMd {
     });
 
     if (type === "global") {
+      document.body.insertAdjacentHTML("beforeend", html);
       return { html: "", raw, id, type };
     }
 

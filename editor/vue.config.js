@@ -1,8 +1,4 @@
 const serveStatic = require("serve-static");
-const fs = require("fs");
-
-process.env.VUE_APP_PLACEHOLDER = fs.readFileSync("../readme-reveal.md", "utf8");
-
 const baseUrl = process.env.BASE_URL || "";
 
 module.exports = {
