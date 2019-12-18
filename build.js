@@ -2,7 +2,10 @@ const { spawnSync } = require("child_process");
 const path = require("path");
 
 const fs = require("fs");
-process.env.VUE_APP_PLACEHOLDER = fs.readFileSync("readme-reveal.md", "utf8");
+
+if (process.env.DEPLOY) {
+  process.env.VUE_APP_PLACEHOLDER = fs.readFileSync("readme-reveal.md", "utf8");
+}
 
 if (!process.env.NO_EDITOR) {
   const editorPath = path.join(__dirname, "editor");

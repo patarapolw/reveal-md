@@ -1,5 +1,5 @@
 {
-  "name": "@patarapolw/reveal-md-cli",
+  "name": "reveal-md",
   "version": "0.2.0",
   "description": "Reveal.js x Markdown (Showdown.js) editor and CLI.",
   "main": "index.js",
@@ -12,7 +12,7 @@
     "help": "node bin/cli.js --help",
     "build": "node build.js",
     "build:readme": "node build-readme.js",
-    "deploy": "BASE_URL=/reveal-md yarn build && gh-pages -d dist",
+    "deploy": "BASE_URL=/reveal-md DEPLOY=1 yarn build && gh-pages -d dist",
     "preinstall": "node preinstall.js && yarn build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
