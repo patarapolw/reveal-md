@@ -13,9 +13,13 @@
     "build": "node build.js",
     "build:readme": "node build-readme.js",
     "deploy": "BASE_URL=/reveal-md DEPLOY=1 yarn build && gh-pages -d dist",
-    "preinstall": "node preinstall.js && yarn build",
+    "prepack": "yarn build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "files": [
+    "bin",
+    "dist"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/patarapolw/reveal-md.git"
@@ -35,6 +39,7 @@
     "dree": "^2.1.11",
     "express": "^4.17.1",
     "open": "^7.0.0",
+    "reveal.js": "^3.8.0",
     "rimraf": "^3.0.0",
     "yargs": "^15.0.2"
   },

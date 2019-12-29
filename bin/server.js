@@ -36,7 +36,7 @@ function initServer(config) {
 
   app.use("/api", router);
   app.use(express.static(path.join(__dirname, "../dist")));
-  app.use("/reveal.js", express.static(path.join(__dirname, "../reveal.js")))
+  app.use("/reveal.js", express.static(path.join(require.resolve("reveal.js"), "../..")))
 
   const port = process.env.PORT || 24000;
   app.listen(port, () => {
