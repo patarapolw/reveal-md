@@ -16,7 +16,7 @@
     "@types/showdown": "^1.9.3",
     "es6-json-stable-stringify": "^2.0.2",
     "gray-matter": "^4.0.2",
-    "highlight.js": "^9.16.2",
+    "highlight.js": "^9.18.1",
     "hyperpug": "^0.2.1",
     "hyperscript": "^2.0.2",
     "scope-css": "^1.2.1",
