@@ -772,10 +772,15 @@
   resolved "https://registry.yarnpkg.com/@types/highlight.js/-/highlight.js-9.12.3.tgz#b672cfaac25cbbc634a0fd92c515f66faa18dbca"
   integrity sha512-pGF/zvYOACZ/gLGWdQH8zSwteQS1epp68yRcVLJMgUck/MjEn/FBYmPub9pXT8C1e4a8YZfHo1CKyV8q1vKUnQ==
 
-"@types/hyperscript@0.0.3", "@types/hyperscript@^0.0.3":
+"@types/hyperscript@0.0.3":
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/@types/hyperscript/-/hyperscript-0.0.3.tgz#52475f8d9e65a080d463c32c95a78d2d42fd00a6"
   integrity sha512-NNbK4Dck3S7ER/7hPq5QFlvrzEgNh+jci9yw84Ii64QJIX5rodtEH+hgxyeJO2bZ56kk5zzd8fQXa+Z9cC9+Og==
+
+"@types/hyperscript@^0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@types/hyperscript/-/hyperscript-0.0.4.tgz#209df6d6f304a8515c8fadb395fe40446d64655a"
+  integrity sha512-oZIYTxzfTYM6KNXwN3PPS5dow3KmjDcMDRF6iSxqidJSyw4kwo6yJlxrY/KrCc+0J14x0CflmZRApbcdLvwDiw==
 
 "@types/node@^12.12.14":
   version "12.12.14"
