@@ -36,7 +36,7 @@
   "homepage": "https://patarapolw.github.io/reveal-md",
   "dependencies": {
     "cors": "^2.8.5",
-    "dree": "^2.1.11",
+    "dree": "^2.4.14",
     "express": "^4.17.1",
     "open": "^7.0.0",
     "reveal.js": "^3.8.0",

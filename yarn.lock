@@ -275,12 +275,12 @@ destroy@~1.0.4:
   resolved "https://registry.yarnpkg.com/destroy/-/destroy-1.0.4.tgz#978857442c44749e4206613e37946205826abd80"
   integrity sha1-l4hXRCxEdJ5CBmE+N5RiBYJqvYA=
 
-dree@^2.1.11:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/dree/-/dree-2.2.1.tgz#7bdf85a9ab843f42e7c43e0830a2348ed113de8b"
-  integrity sha512-q0ronGARrL612iQYQTVYFsleCmbPUSMzHEuhLo4GPzQY+Azkyy0LXsc1KBdRqN+LHYhX9c1juunwzd4Tkw3I2w==
+dree@^2.4.14:
+  version "2.4.14"
+  resolved "https://registry.yarnpkg.com/dree/-/dree-2.4.14.tgz#c2ea285a5192c3f700d73c78346c54db7e476c79"
+  integrity sha512-Vdh9iaGOIz/CLQobP+aC4CnmN0bkKlljjtLCTQJm25xgjEscrTP/yK9+JxdqnM0/d5zjRa245Sr5xoewoS5Icw==
   dependencies:
-    yargs "^15.0.2"
+    yargs "^15.3.1"
 
 ee-first@1.1.1:
   version "1.1.1"
@@ -1314,6 +1314,14 @@ yargs-parser@^16.1.0:
     camelcase "^5.0.0"
     decamelize "^1.2.0"
 
+yargs-parser@^18.1.2:
+  version "18.1.3"
+  resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-18.1.3.tgz#be68c4975c6b2abf469236b0c870362fab09a7b0"
+  integrity sha512-o50j0JeToy/4K6OZcaQmW6lyXXKhq7csREXcDwk2omFPJEwUNOVtJKvmDr9EI1fAJZUyZcRF7kxGBWmRXudrCQ==
+  dependencies:
+    camelcase "^5.0.0"
+    decamelize "^1.2.0"
+
 yargs@^15.0.2:
   version "15.0.2"
   resolved "https://registry.yarnpkg.com/yargs/-/yargs-15.0.2.tgz#4248bf218ef050385c4f7e14ebdf425653d13bd3"
@@ -1330,3 +1338,20 @@ yargs@^15.0.2:
     which-module "^2.0.0"
     y18n "^4.0.0"
     yargs-parser "^16.1.0"
+
+yargs@^15.3.1:
+  version "15.4.1"
+  resolved "https://registry.yarnpkg.com/yargs/-/yargs-15.4.1.tgz#0d87a16de01aee9d8bec2bfbf74f67851730f4f8"
+  integrity sha512-aePbxDmcYW++PaqBsJ+HYUFwCdv4LVvdnhBy78E57PIor8/OVvhMrADFFEDh8DHDFRv/O9i3lPhsENjO7QX0+A==
+  dependencies:
+    cliui "^6.0.0"
+    decamelize "^1.2.0"
+    find-up "^4.1.0"
+    get-caller-file "^2.0.1"
+    require-directory "^2.1.1"
+    require-main-filename "^2.0.0"
+    set-blocking "^2.0.0"
+    string-width "^4.2.0"
+    which-module "^2.0.0"
+    y18n "^4.0.0"
+    yargs-parser "^18.1.2"
