@@ -41,7 +41,7 @@
     "open": "^7.0.0",
     "reveal.js": "^3.8.0",
     "rimraf": "^3.0.0",
-    "yargs": "^15.0.2"
+    "yargs": "^15.4.0"
   },
   "devDependencies": {
     "gh-pages": "^2.1.1",
