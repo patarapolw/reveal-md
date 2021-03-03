@@ -6,7 +6,7 @@
   "devDependencies": {
     "@types/node": "^12.12.14",
     "parcel-bundler": "^1.12.4",
-    "pug": "^2.0.4",
+    "pug": "^3.0.1",
     "sass": "^1.23.7",
     "typescript": "^3.7.2"
   },
