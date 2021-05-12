@@ -14,7 +14,7 @@
     "@types/node": "^12.12.14",
     "bootstrap": "^4.4.1",
     "bootstrap-vue": "^2.1.0",
-    "codemirror": "^5.49.2",
+    "codemirror": "^5.58.2",
     "core-js": "^3.4.3",
     "gray-matter": "^4.0.2",
     "serve-static": "^1.14.1",
