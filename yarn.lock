@@ -1016,10 +1016,10 @@ resolve@^1.10.0:
   dependencies:
     path-parse "^1.0.6"
 
-reveal.js@^3.8.0:
-  version "3.8.0"
-  resolved "https://registry.yarnpkg.com/reveal.js/-/reveal.js-3.8.0.tgz#9a2818e366d46237f0e64c00f50a05f2340cd50f"
-  integrity sha512-MQ+UBXIIL9IyBXhkLZWb/AG5h5/BedmnHXHIEavMBawNLVfAayvTrwNlDjGn4tf/CQ2CTJR8jSyIdu4RpfoLpg==
+reveal.js@^4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/reveal.js/-/reveal.js-4.3.0.tgz#6fe91cc84de2e286f039545cb596dbc4d0d52294"
+  integrity sha512-KzZxJjj1gmxVNyplY6g9MiGwtDvZJiYkMvG1Qmaita7vWT/8eoTEK+RuIPLvxDeyxOtTz56u2wrOETVO79qL4A==
 
 rimraf@^2.6.2:
   version "2.7.1"
