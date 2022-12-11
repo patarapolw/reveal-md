@@ -37,7 +37,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "dree": "^2.1.11",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "open": "^7.0.0",
     "reveal.js": "^3.8.0",
     "rimraf": "^3.0.0",
